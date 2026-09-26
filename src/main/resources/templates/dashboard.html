@@ -2,255 +2,266 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard — AI Zoo Care & Feeding Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .sidebar { width: 280px; background-color: #ffffff; border-right: 1px solid #e2e8f0; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-weight: 500; color: #475569; border-radius: 8px; transition: all 0.2s; margin-bottom: 4px; }
+        .nav-item:hover { background-color: #f1f5f9; color: #1e3a8a; }
+        .nav-item.active { background-color: #eff6ff; color: #1d4ed8; font-weight: 600; border-left: 4px solid #2563eb; }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
 </head>
-<body class="bg-slate-50">
+<body class="flex h-screen overflow-hidden">
 
-    <div th:replace="~{layout/main :: body}">
-        <!-- Page Title Header override via params -->
-    </div>
+    <!-- Include Sidebar Fragment -->
+    <div th:replace="~{layout/main :: sidebar}"></div>
 
-    <!-- Content Fragment -->
-    <div th:fragment="content" class="space-y-6">
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <!-- Include Header Fragment -->
+        <div th:replace="~{layout/main :: header}"></div>
 
-        <!-- Header Title Banner -->
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-blue-950">AI Zoo Operations Dashboard</h1>
-                <p class="text-sm text-slate-500">Real-Time Data Derived Directly from Persistent SQLite (`zoo.db`)</p>
-            </div>
-            <a th:href="@{/planner}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg shadow flex items-center gap-2">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                <span>Open AI Planner</span>
-            </a>
-        </div>
-
-        <!-- 8 STATISTICAL DASHBOARD CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-            <!-- Card 1: Total Animals -->
-            <div class="card p-5 border-l-4 border-blue-600 flex items-center justify-between">
+        <div class="p-8 space-y-6">
+            <!-- Header Title Banner -->
+            <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Animals</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${totalAnimals}">0</h3>
-                    <p class="text-xs text-blue-600 mt-1">SQLite `animals` count</p>
+                    <h1 class="text-2xl font-bold text-blue-950">AI Zoo Operations Dashboard</h1>
+                    <p class="text-sm text-slate-500">Real-Time Data Derived Directly from Persistent SQLite (`zoo.db`)</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl">🐘</div>
+                <a th:href="@{/planner}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg shadow flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Open AI Planner</span>
+                </a>
             </div>
 
-            <!-- Card 2: Available Foods Today -->
-            <div class="card p-5 border-l-4 border-emerald-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Available Foods Today</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${availableFoodsToday}">0</h3>
-                    <p class="text-xs text-emerald-600 mt-1">Active inventory items</p>
-                </div>
-                <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">🍎</div>
-            </div>
+            <!-- 8 STATISTICAL DASHBOARD CARDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-            <!-- Card 3: Today's Feeding Tasks -->
-            <div class="card p-5 border-l-4 border-indigo-600 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Today's Feeding Tasks</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${todayFeedingTasks}">0</h3>
-                    <p class="text-xs text-indigo-600 mt-1">Scheduled by AI Planner</p>
-                </div>
-                <div class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">🍽️</div>
-            </div>
-
-            <!-- Card 4: Available Zookeepers -->
-            <div class="card p-5 border-l-4 border-sky-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Available Zookeepers</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${availableKeepers}">0</h3>
-                    <p class="text-xs text-sky-600 mt-1">On active duty shift</p>
-                </div>
-                <div class="w-12 h-12 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-xl">👤</div>
-            </div>
-
-            <!-- Card 5: Food Conflicts -->
-            <div class="card p-5 border-l-4 border-amber-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Food Conflicts</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${foodConflicts}">0</h3>
-                    <p class="text-xs text-amber-600 mt-1">Stock shortage alerts</p>
-                </div>
-                <div class="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xl">⚠️</div>
-            </div>
-
-            <!-- Card 6: Schedule Conflicts -->
-            <div class="card p-5 border-l-4 border-rose-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Schedule Conflicts</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${scheduleConflicts}">0</h3>
-                    <p class="text-xs text-rose-600 mt-1">Overlap / unavailability</p>
-                </div>
-                <div class="w-12 h-12 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xl">⏰</div>
-            </div>
-
-            <!-- Card 7: Pending Observations -->
-            <div class="card p-5 border-l-4 border-purple-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pending Observations</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${pendingObservations}">0</h3>
-                    <p class="text-xs text-purple-600 mt-1">Flagged for monitoring</p>
-                </div>
-                <div class="w-12 h-12 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl">📝</div>
-            </div>
-
-            <!-- Card 8: AI Recommendations -->
-            <div class="card p-5 border-l-4 border-teal-500 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">AI Recommendations</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${aiRecommendations}">0</h3>
-                    <p class="text-xs text-teal-600 mt-1">Enrichment & XAI decisions</p>
-                </div>
-                <div class="w-12 h-12 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-xl">🤖</div>
-            </div>
-        </div>
-
-        <!-- 6 DASHBOARD SECTIONS -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Section 1: Today's Feeding Plan (Col Span 2) -->
-            <div class="lg:col-span-2 card p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 class="font-bold text-blue-900 flex items-center gap-2">
-                        <span>1. Today's Feeding Plan</span>
-                        <span class="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full font-semibold" th:if="${todayFeedingPlan != null}" th:text="${todayFeedingPlan.solverMethod}">CSP</span>
-                    </h3>
-                    <a th:href="@{/planner}" class="text-xs font-semibold text-blue-600 hover:underline">View Planner &rarr;</a>
+                <!-- Card 1: Total Animals -->
+                <div class="card p-5 border-l-4 border-blue-600 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Animals</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${totalAnimals} ?: 0">0</h3>
+                        <p class="text-xs text-blue-600 mt-1">SQLite `animals` count</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl">🐘</div>
                 </div>
 
-                <div th:if="${feedingTasks.empty}" class="p-8 text-center text-slate-500">
-                    <p>No active feeding plan generated yet for today.</p>
-                    <form th:action="@{/planner/generate}" method="post" class="mt-3">
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700">
-                            Generate Today's Plan
-                        </button>
-                    </form>
+                <!-- Card 2: Available Foods Today -->
+                <div class="card p-5 border-l-4 border-emerald-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Available Foods Today</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${availableFoodsToday} ?: 0">0</h3>
+                        <p class="text-xs text-emerald-600 mt-1">Active inventory items</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">🍎</div>
                 </div>
 
-                <div th:if="${!feedingTasks.empty}" class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-200">
-                                <th class="p-3">Animal</th>
-                                <th class="p-3">Species</th>
-                                <th class="p-3">Food Item</th>
-                                <th class="p-3">Portion</th>
-                                <th class="p-3">Time</th>
-                                <th class="p-3">Zookeeper</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                            <tr th:each="t : ${feedingTasks}">
-                                <td class="p-3 font-semibold text-blue-900" th:text="${t.animalName}">Aruna</td>
-                                <td class="p-3 text-slate-500" th:text="${t.species}">Elephant</td>
-                                <td class="p-3"><span class="px-2 py-1 bg-green-50 text-green-700 rounded border border-green-200 font-medium" th:text="${t.foodName}">Grass</span></td>
-                                <td class="p-3 font-mono" th:text="${t.quantityKg + ' kg'}">25 kg</td>
-                                <td class="p-3" th:text="${t.feedingTime}">08:00 AM</td>
-                                <td class="p-3"><span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full font-medium" th:text="${t.zookeeperName}">Keeper A</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Card 3: Today's Feeding Tasks -->
+                <div class="card p-5 border-l-4 border-indigo-600 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Today's Feeding Tasks</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${todayFeedingTasks} ?: 0">0</h3>
+                        <p class="text-xs text-indigo-600 mt-1">Scheduled by AI Planner</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">🍽️</div>
+                </div>
+
+                <!-- Card 4: Available Zookeepers -->
+                <div class="card p-5 border-l-4 border-sky-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Available Zookeepers</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${availableKeepers} ?: 0">0</h3>
+                        <p class="text-xs text-sky-600 mt-1">On active duty shift</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-xl">👤</div>
+                </div>
+
+                <!-- Card 5: Food Conflicts -->
+                <div class="card p-5 border-l-4 border-amber-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Food Conflicts</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${foodConflicts} ?: 0">0</h3>
+                        <p class="text-xs text-amber-600 mt-1">Stock shortage alerts</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xl">⚠️</div>
+                </div>
+
+                <!-- Card 6: Schedule Conflicts -->
+                <div class="card p-5 border-l-4 border-rose-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Schedule Conflicts</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${scheduleConflicts} ?: 0">0</h3>
+                        <p class="text-xs text-rose-600 mt-1">Overlap / unavailability</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xl">⏰</div>
+                </div>
+
+                <!-- Card 7: Pending Observations -->
+                <div class="card p-5 border-l-4 border-purple-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pending Observations</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${pendingObservations} ?: 0">0</h3>
+                        <p class="text-xs text-purple-600 mt-1">Flagged for monitoring</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl">📝</div>
+                </div>
+
+                <!-- Card 8: AI Recommendations -->
+                <div class="card p-5 border-l-4 border-teal-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">AI Recommendations</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1" th:text="${aiRecommendations} ?: 0">0</h3>
+                        <p class="text-xs text-teal-600 mt-1">Enrichment & XAI decisions</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-xl">🤖</div>
                 </div>
             </div>
 
-            <!-- Section 2: Today's Food Availability -->
-            <div class="card p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 class="font-bold text-blue-900">2. Today's Food Stock</h3>
-                    <a th:href="@{/food-observations}" class="text-xs font-semibold text-blue-600 hover:underline">Manage Stock &rarr;</a>
+            <!-- 6 DASHBOARD SECTIONS -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Section 1: Today's Feeding Plan (Col Span 2) -->
+                <div class="lg:col-span-2 card p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-blue-900 flex items-center gap-2">
+                            <span>1. Today's Feeding Plan</span>
+                            <span class="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full font-semibold" th:if="${todayFeedingPlan != null}" th:text="${todayFeedingPlan.solverMethod}">CSP</span>
+                        </h3>
+                        <a th:href="@{/planner}" class="text-xs font-semibold text-blue-600 hover:underline">View Planner &rarr;</a>
+                    </div>
+
+                    <div th:if="${feedingTasks == null or feedingTasks.empty}" class="p-8 text-center text-slate-500">
+                        <p>No active feeding plan generated yet for today.</p>
+                        <form th:action="@{/planner/generate}" method="post" class="mt-3">
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700">
+                                Generate Today's Plan
+                            </button>
+                        </form>
+                    </div>
+
+                    <div th:if="${feedingTasks != null and !feedingTasks.empty}" class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 border-b border-slate-200">
+                                    <th class="p-3">Animal</th>
+                                    <th class="p-3">Species</th>
+                                    <th class="p-3">Food Item</th>
+                                    <th class="p-3">Portion</th>
+                                    <th class="p-3">Time</th>
+                                    <th class="p-3">Zookeeper</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
+                                <tr th:each="t : ${feedingTasks}">
+                                    <td class="p-3 font-semibold text-blue-900" th:text="${t.animalName}">Aruna</td>
+                                    <td class="p-3 text-slate-500" th:text="${t.species}">Elephant</td>
+                                    <td class="p-3"><span class="px-2 py-1 bg-green-50 text-green-700 rounded border border-green-200 font-medium" th:text="${t.foodName}">Grass</span></td>
+                                    <td class="p-3 font-mono" th:text="${t.quantityKg + ' kg'}">25 kg</td>
+                                    <td class="p-3" th:text="${t.feedingTime}">08:00 AM</td>
+                                    <td class="p-3"><span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full font-medium" th:text="${t.zookeeperName}">Keeper A</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="space-y-3">
-                    <div th:each="f : ${foodList}" class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
-                        <div>
-                            <p class="font-semibold text-slate-800 text-sm" th:text="${f.name}">Grass</p>
-                            <p class="text-xs text-slate-500" th:text="${f.isAvailable ? 'Status: Available' : 'Status: Out of Stock'}">Available</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-mono font-bold text-sm text-blue-900" th:text="${f.remainingQuantity + ' ' + f.unit}">150 kg</p>
-                            <span th:class="${f.remainingQuantity > 10 ? 'text-xs text-green-600 font-semibold' : 'text-xs text-red-600 font-semibold'}"
-                                  th:text="${f.remainingQuantity > 10 ? 'Sufficient' : 'Low Stock'}">Sufficient</span>
+
+                <!-- Section 2: Today's Food Availability -->
+                <div class="card p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-blue-900">2. Today's Food Stock</h3>
+                        <a th:href="@{/food-observations}" class="text-xs font-semibold text-blue-600 hover:underline">Manage Stock &rarr;</a>
+                    </div>
+                    <div class="space-y-3">
+                        <div th:each="f : ${foodList}" class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div>
+                                <p class="font-semibold text-slate-800 text-sm" th:text="${f.name}">Grass</p>
+                                <p class="text-xs text-slate-500" th:text="${f.isAvailable ? 'Status: Available' : 'Status: Out of Stock'}">Available</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-mono font-bold text-sm text-blue-900" th:text="${f.remainingQuantity + ' ' + f.unit}">150 kg</p>
+                                <span th:class="${f.remainingQuantity > 10 ? 'text-xs text-green-600 font-semibold' : 'text-xs text-red-600 font-semibold'}"
+                                      th:text="${f.remainingQuantity > 10 ? 'Sufficient' : 'Low Stock'}">Sufficient</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Section 3: AI Alerts & Conflicts -->
-            <div class="card p-6 space-y-4">
-                <div class="border-b border-slate-100 pb-3">
-                    <h3 class="font-bold text-blue-900">3. AI Active Alerts & Conflicts</h3>
-                </div>
-                <div th:if="${aiAlerts.empty}" class="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>No unresolved AI food or zookeeper conflicts detected.</span>
-                </div>
-                <div th:each="c : ${aiAlerts}" class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 text-sm space-y-1">
-                    <p class="font-bold flex items-center justify-between">
-                        <span th:text="${c.conflictType}">FOOD_SHORTAGE</span>
-                        <span class="text-xs px-2 py-0.5 bg-amber-200 text-amber-800 rounded">Pending</span>
-                    </p>
-                    <p class="text-xs text-amber-800" th:text="${c.description}">Banana shortage 5kg detected.</p>
-                </div>
-            </div>
-
-            <!-- Section 4: Recent Animal Observations -->
-            <div class="card p-6 space-y-4">
-                <div class="border-b border-slate-100 pb-3">
-                    <h3 class="font-bold text-blue-900">4. Recent Animal Observations</h3>
-                </div>
-                <div class="space-y-3">
-                    <div th:each="o : ${recentObservations}" class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-blue-900" th:text="${o.animalName + ' (' + o.animalId + ')'}">Aruna (E101)</span>
-                            <span th:class="${o.aiPatternDetected == 'Attention Required' ? 'text-xs font-bold px-2 py-0.5 bg-red-100 text-red-700 rounded' : (o.aiPatternDetected == 'Monitor' ? 'text-xs font-bold px-2 py-0.5 bg-amber-100 text-amber-700 rounded' : 'text-xs font-bold px-2 py-0.5 bg-green-100 text-green-700 rounded')}"
-                                  th:text="${o.aiPatternDetected}">Normal</span>
-                        </div>
-                        <p class="text-xs text-slate-600" th:text="${'Intake: ' + o.foodIntake + ' | Activity: ' + o.activityLevel}">Intake: Low</p>
-                        <p class="text-xs italic text-slate-500" th:text="${'&quot;' + o.observationText + '&quot;'}">"Ate less today"</p>
+                <!-- Section 3: AI Alerts & Conflicts -->
+                <div class="card p-6 space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-blue-900">3. AI Active Alerts & Conflicts</h3>
                     </div>
-                </div>
-            </div>
-
-            <!-- Section 5: Enrichment Recommendations -->
-            <div class="card p-6 space-y-4">
-                <div class="border-b border-slate-100 pb-3">
-                    <h3 class="font-bold text-blue-900">5. AI Enrichment Recommendations</h3>
-                </div>
-                <div class="space-y-3">
-                    <div th:each="e : ${enrichmentRecommendations}" class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm space-y-1">
-                        <p class="font-bold text-blue-900 flex items-center justify-between">
-                            <span th:text="${e.animalName}">Aruna</span>
-                            <span class="text-xs font-normal text-blue-700" th:text="${e.activityName}">Water Play</span>
+                    <div th:if="${aiAlerts == null or aiAlerts.empty}" class="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>No unresolved AI food or zookeeper conflicts detected.</span>
+                    </div>
+                    <div th:each="c : ${aiAlerts}" class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 text-sm space-y-1">
+                        <p class="font-bold flex items-center justify-between">
+                            <span th:text="${c.conflictType}">FOOD_SHORTAGE</span>
+                            <span class="text-xs px-2 py-0.5 bg-amber-200 text-amber-800 rounded">Pending</span>
                         </p>
-                        <p class="text-xs text-blue-800" th:text="${e.reason}">Suitable for species & resources available.</p>
+                        <p class="text-xs text-amber-800" th:text="${c.description}">Banana shortage 5kg detected.</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Section 6: Recent AI Decisions (Full Width Col 3) -->
-            <div class="lg:col-span-3 card p-6 space-y-4">
-                <div class="border-b border-slate-100 pb-3">
-                    <h3 class="font-bold text-blue-900">6. Recent AI Decisions & Explainable AI Rationales</h3>
-                </div>
-                <div class="space-y-3">
-                    <div th:each="d : ${recentAiDecisions}" class="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-sm text-blue-900" th:text="${d.title}">AI Decision Title</span>
-                            <span class="text-xs font-mono text-slate-400" th:text="${d.timestamp}">10:32 AM</span>
+                <!-- Section 4: Recent Animal Observations -->
+                <div class="card p-6 space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-blue-900">4. Recent Animal Observations</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div th:each="o : ${recentObservations}" class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-blue-900" th:text="${o.animalName + ' (' + o.animalId + ')'}">Aruna (E101)</span>
+                                <span th:class="${o.aiPatternDetected == 'Attention Required' ? 'text-xs font-bold px-2 py-0.5 bg-red-100 text-red-700 rounded' : (o.aiPatternDetected == 'Monitor' ? 'text-xs font-bold px-2 py-0.5 bg-amber-100 text-amber-700 rounded' : 'text-xs font-bold px-2 py-0.5 bg-green-100 text-green-700 rounded')}"
+                                      th:text="${o.aiPatternDetected}">Normal</span>
+                            </div>
+                            <p class="text-xs text-slate-600" th:text="${'Intake: ' + o.foodIntake + ' | Activity: ' + o.activityLevel}">Intake: Low</p>
+                            <p class="text-xs italic text-slate-500" th:text="${'&quot;' + o.observationText + '&quot;'}">"Ate less today"</p>
                         </div>
-                        <p class="text-xs text-slate-700 whitespace-pre-line font-mono" th:text="${d.explanation}">Explanation text</p>
                     </div>
                 </div>
+
+                <!-- Section 5: Enrichment Recommendations -->
+                <div class="card p-6 space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-blue-900">5. AI Enrichment Recommendations</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div th:each="e : ${enrichmentRecommendations}" class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm space-y-1">
+                            <p class="font-bold text-blue-900 flex items-center justify-between">
+                                <span th:text="${e.animalName}">Aruna</span>
+                                <span class="text-xs font-normal text-blue-700" th:text="${e.activityName}">Water Play</span>
+                            </p>
+                            <p class="text-xs text-blue-800" th:text="${e.reason}">Suitable for species & resources available.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Recent AI Decisions (Full Width Col 3) -->
+                <div class="lg:col-span-3 card p-6 space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-blue-900">6. Recent AI Decisions & Explainable AI Rationales</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div th:each="d : ${recentAiDecisions}" class="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-sm text-blue-900" th:text="${d.title}">AI Decision Title</span>
+                                <span class="text-xs font-mono text-slate-400" th:text="${d.timestamp}">10:32 AM</span>
+                            </div>
+                            <p class="text-xs text-slate-700 whitespace-pre-line font-mono" th:text="${d.explanation}">Explanation text</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
         </div>
-
-    </div>
+    </main>
 
 </body>
 </html>
