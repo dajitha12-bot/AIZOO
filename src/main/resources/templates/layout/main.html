@@ -22,22 +22,27 @@
             <nav class="space-y-1">
                 <a th:href="@{/dashboard}" class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active' : ''">
                     <span class="text-xl">📊</span>
-                    <span>Dashboard</span>
+                    <span>Live Dashboard</span>
                 </a>
 
                 <a th:href="@{/animals}" class="nav-item" th:classappend="${activePage == 'animals'} ? 'active' : ''">
                     <span class="text-xl">🐘</span>
-                    <span>Animals & Knowledge</span>
+                    <span>Animals & AI Knowledge</span>
                 </a>
 
                 <a th:href="@{/food-observations}" class="nav-item" th:classappend="${activePage == 'food-observations'} ? 'active' : ''">
                     <span class="text-xl">🍎</span>
-                    <span>Today's Food & Obs</span>
+                    <span>Today's Inputs</span>
                 </a>
 
                 <a th:href="@{/planner}" class="nav-item" th:classappend="${activePage == 'planner'} ? 'active' : ''">
-                    <span class="text-xl">🍽️</span>
-                    <span>AI Feeding Planner</span>
+                    <span class="text-xl">🧠</span>
+                    <span>AI Care Mission</span>
+                </a>
+
+                <a th:href="@{/scenario-planner}" class="nav-item" th:classappend="${activePage == 'scenario-planner'} ? 'active' : ''">
+                    <span class="text-xl">🔮</span>
+                    <span>AI Scenario Planner</span>
                 </a>
 
                 <a th:href="@{/assistant}" class="nav-item" th:classappend="${activePage == 'assistant'} ? 'active' : ''">
