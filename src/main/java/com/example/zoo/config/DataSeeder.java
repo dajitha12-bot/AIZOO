@@ -50,7 +50,11 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        ensureLocalImagesExist();
+        try {
+            ensureLocalImagesExist();
+        } catch (Throwable t) {
+            System.out.println("Notice: Dynamic image generation skipped in cloud environment (" + t.getMessage() + "). Pre-packaged static images will be used.");
+        }
 
         if (animalRepository.count() == 0) {
             seedSpeciesKnowledge();
@@ -130,8 +134,8 @@ public class DataSeeder implements CommandLineRunner {
 
             g2d.dispose();
             ImageIO.write(image, "PNG", file);
-        } catch (Exception e) {
-            System.err.println("Could not generate image for " + animalName + ": " + e.getMessage());
+        } catch (Throwable e) {
+            System.err.println("Notice: Dynamic image generation skipped for " + animalName);
         }
     }
 
