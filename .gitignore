@@ -1,0 +1,7 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!target/classes/static/images/
+.mvn/
+.idea/
+*.iml
+.DS_Store

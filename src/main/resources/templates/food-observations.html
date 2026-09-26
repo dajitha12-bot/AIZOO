@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Today's Food & Observations — AI Zoo Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50">
+
+    <div th:replace="~{layout/main :: body}"></div>
+
+    <div th:fragment="content" class="space-y-6">
+
+        <!-- Header Navigation Tabs -->
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-blue-950">Today's Food & Observations</h1>
+                <p class="text-sm text-slate-500">Inventory Stock, Zookeeper Shifts, and Health Logs</p>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-200 p-1 rounded-lg">
+                <a th:href="@{/food-observations(tab=1)}"
+                   th:class="${activeTab == '1'} ? 'px-4 py-2 text-sm font-semibold bg-white text-blue-700 rounded-md shadow-sm' : 'px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-700'">
+                    🍎 TAB 1: TODAY'S FOOD
+                </a>
+                <a th:href="@{/food-observations(tab=2)}"
+                   th:class="${activeTab == '2'} ? 'px-4 py-2 text-sm font-semibold bg-white text-blue-700 rounded-md shadow-sm' : 'px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-700'">
+                    👤 TAB 2: ZOOKEEPER AVAILABILITY
+                </a>
+                <a th:href="@{/food-observations(tab=3)}"
+                   th:class="${activeTab == '3'} ? 'px-4 py-2 text-sm font-semibold bg-white text-blue-700 rounded-md shadow-sm' : 'px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-700'">
+                    📝 TAB 3: OBSERVATIONS
+                </a>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 1 — TODAY'S FOOD -->
+        <!-- ========================================== -->
+        <div th:if="${activeTab == '1'}" class="space-y-6">
+            <div class="card p-6 space-y-4">
+                <h3 class="font-bold text-lg text-slate-800">Food Inventory Stock Management (SQLite Persistent)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 border-b">
+                                <th class="p-3">Food Item</th>
+                                <th class="p-3">Available Quantity</th>
+                                <th class="p-3">Unit</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Update Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700">
+                            <tr th:each="f : ${foods}">
+                                <form th:action="@{/food-observations/update-food}" method="post">
+                                    <input type="hidden" name="id" th:value="${f.id}">
+                                    <td class="p-3 font-semibold text-blue-900" th:text="${f.name}">Grass</td>
+                                    <td class="p-3">
+                                        <input type="number" step="0.1" name="quantity" th:value="${f.totalQuantity}" required class="w-24 p-1.5 border rounded text-sm font-mono">
+                                    </td>
+                                    <td class="p-3 font-mono text-slate-500" th:text="${f.unit}">kg</td>
+                                    <td class="p-3">
+                                        <label class="inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" name="isAvailable" value="true" th:checked="${f.isAvailable}" class="sr-only peer">
+                                            <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600 relative"></div>
+                                            <span class="ml-2 text-xs font-semibold" th:text="${f.isAvailable ? 'Available' : 'Out of Stock'}">Available</span>
+                                        </label>
+                                    </td>
+                                    <td class="p-3">
+                                        <button type="submit" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700">
+                                            Update
+                                        </button>
+                                    </td>
+                                </form>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2 — ZOOKEEPER AVAILABILITY -->
+        <!-- ========================================== -->
+        <div th:if="${activeTab == '2'}" class="space-y-6">
+            <div class="card p-6 space-y-4">
+                <h3 class="font-bold text-lg text-slate-800">Zookeeper Shift Availability</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div th:each="zk : ${zookeepers}" class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-blue-900" th:text="${zk.name}">Zookeeper A</h4>
+                            <span th:class="${zk.isAvailable ? 'text-xs font-bold px-2.5 py-1 bg-green-100 text-green-700 rounded-full' : 'text-xs font-bold px-2.5 py-1 bg-red-100 text-red-700 rounded-full'}"
+                                  th:text="${zk.isAvailable ? 'On Duty' : 'Off Duty'}">On Duty</span>
+                        </div>
+                        <p class="text-xs text-slate-600 flex items-center gap-1 font-mono">
+                            <i class="fa-solid fa-clock text-slate-400"></i>
+                            <span th:text="${zk.shiftStart + ' – ' + zk.shiftEnd}">08:00 AM – 04:00 PM</span>
+                        </p>
+                        <form th:action="@{/food-observations/update-keeper}" method="post">
+                            <input type="hidden" name="id" th:value="${zk.id}">
+                            <input type="hidden" name="isAvailable" th:value="${!zk.isAvailable}">
+                            <button type="submit" th:class="${zk.isAvailable ? 'w-full py-2 bg-rose-600 text-white text-xs font-semibold rounded-lg hover:bg-rose-700' : 'w-full py-2 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700'}">
+                                <span th:text="${zk.isAvailable ? 'Set as Unavailable' : 'Set as Available'}">Toggle Shift</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 3 — OBSERVATIONS -->
+        <!-- ========================================== -->
+        <div th:if="${activeTab == '3'}" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Form Column -->
+            <div class="card p-6 space-y-4">
+                <h3 class="font-bold text-lg text-slate-800">Record Daily Observation</h3>
+                <form th:action="@{/food-observations/add-observation}" method="post" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Select Animal</label>
+                        <select name="animalId" required class="w-full p-2.5 border rounded-lg text-sm bg-slate-50">
+                            <option th:each="a : ${animals}" th:value="${a.animalId}" th:text="${a.name + ' (' + a.species + ' - ' + a.animalId + ')'}">Aruna</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Food Intake</label>
+                        <select name="foodIntake" class="w-full p-2.5 border rounded-lg text-sm bg-slate-50">
+                            <option value="Low">Low</option>
+                            <option value="Normal" selected>Normal</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Water Intake</label>
+                        <select name="waterIntake" class="w-full p-2.5 border rounded-lg text-sm bg-slate-50">
+                            <option value="Low">Low</option>
+                            <option value="Normal" selected>Normal</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Activity Level</label>
+                        <select name="activityLevel" class="w-full p-2.5 border rounded-lg text-sm bg-slate-50">
+                            <option value="Low">Low</option>
+                            <option value="Normal" selected>Normal</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Observation Notes</label>
+                        <textarea name="observationText" rows="3" required placeholder="e.g. Aruna ate less food today." class="w-full p-2.5 border rounded-lg text-sm bg-slate-50"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-2.5 bg-blue-600 text-white font-semibold text-sm rounded-lg hover:bg-blue-700 shadow">
+                        Save Observation & Run AI Analysis
+                    </button>
+                </form>
+            </div>
+
+            <!-- History List (Span 2) -->
+            <div class="lg:col-span-2 card p-6 space-y-4">
+                <h3 class="font-bold text-lg text-slate-800">Observation History & AI Pattern Detection</h3>
+                <div class="space-y-3">
+                    <div th:each="o : ${observations}" class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-blue-900 text-base" th:text="${o.animalName}">Aruna</span>
+                                <span class="text-xs font-mono px-2 py-0.5 bg-slate-200 rounded text-slate-600" th:text="${o.animalId}">E101</span>
+                            </div>
+                            <span th:class="${o.aiPatternDetected == 'Attention Required' ? 'px-3 py-1 bg-red-100 text-red-700 font-bold text-xs rounded-full border border-red-200' : (o.aiPatternDetected == 'Monitor' ? 'px-3 py-1 bg-amber-100 text-amber-700 font-bold text-xs rounded-full border border-amber-200' : 'px-3 py-1 bg-green-100 text-green-700 font-bold text-xs rounded-full border border-green-200')}"
+                                  th:text="${'AI Pattern: ' + o.aiPatternDetected}">Normal</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs font-semibold text-slate-600">
+                            <span>Food Intake: <strong class="text-slate-800" th:text="${o.foodIntake}">Low</strong></span>
+                            <span>Water Intake: <strong class="text-slate-800" th:text="${o.waterIntake}">Normal</strong></span>
+                            <span>Activity: <strong class="text-slate-800" th:text="${o.activityLevel}">Low</strong></span>
+                        </div>
+                        <p class="text-xs text-slate-700 italic bg-white p-2.5 rounded border border-slate-100" th:text="${'&quot;' + o.observationText + '&quot;'}">Notes...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

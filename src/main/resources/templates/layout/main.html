@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} ?: 'AI Zoo Care & Feeding Planner'">AI Zoo Care & Feeding Planner</title>
+    <!-- Tailwind CSS CDN for ACME Enterprise Blue Theme Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .sidebar { width: 280px; background-color: #ffffff; border-right: 1px solid #e2e8f0; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-weight: 500; color: #475569; border-radius: 8px; transition: all 0.2s; margin-bottom: 4px; }
+        .nav-item:hover { background-color: #f1f5f9; color: #1e3a8a; }
+        .nav-item.active { background-color: #eff6ff; color: #1d4ed8; font-weight: 600; border-left: 4px solid #2563eb; }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .btn-primary { background-color: #2563eb; color: white; transition: background 0.2s; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- FIXED LEFT SIDEBAR -->
+    <aside class="sidebar flex flex-col justify-between h-full p-4 flex-shrink-0">
+        <div>
+            <!-- Header Logo -->
+            <div class="flex items-center gap-3 px-3 py-4 mb-6 border-b border-slate-100">
+                <span class="text-3xl">🦁</span>
+                <div>
+                    <h1 class="text-lg font-bold text-blue-900 leading-tight">AI ZOO PLANNER</h1>
+                    <p class="text-xs text-slate-500 font-medium">Intelligent Decision System</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-1">
+                <a th:href="@{/dashboard}" class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active' : ''">
+                    <span class="text-xl">📊</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/animals}" class="nav-item" th:classappend="${activePage == 'animals'} ? 'active' : ''">
+                    <span class="text-xl">🐘</span>
+                    <span>Animals & Knowledge</span>
+                </a>
+
+                <a th:href="@{/food-observations}" class="nav-item" th:classappend="${activePage == 'food-observations'} ? 'active' : ''">
+                    <span class="text-xl">🍎</span>
+                    <span>Today's Food & Obs</span>
+                </a>
+
+                <a th:href="@{/planner}" class="nav-item" th:classappend="${activePage == 'planner'} ? 'active' : ''">
+                    <span class="text-xl">🍽️</span>
+                    <span>AI Feeding Planner</span>
+                </a>
+
+                <a th:href="@{/assistant}" class="nav-item" th:classappend="${activePage == 'assistant'} ? 'active' : ''">
+                    <span class="text-xl">🤖</span>
+                    <span>AI Zoo Assistant</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Bottom Footer -->
+        <div class="pt-4 border-t border-slate-100">
+            <div class="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                        👤
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-800" th:text="${session.zookeeper} ?: 'Zookeeper'">Zookeeper</p>
+                        <p class="text-xs text-slate-500">Active Session</p>
+                    </div>
+                </div>
+                <a th:href="@{/logout}" class="text-slate-400 hover:text-red-600 text-sm p-1" title="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <!-- Top Bar -->
+        <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800" th:text="${headerTitle} ?: 'Dashboard'">Dashboard</h2>
+                <p class="text-xs text-slate-500">AI-Powered Intelligent Zoo Care & Decision Support</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-xs font-semibold px-3 py-1 bg-green-100 text-green-700 rounded-full border border-green-200 flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> SQLite Active (zoo.db)
+                </span>
+            </div>
+        </header>
+
+        <!-- Page Content Fragment -->
+        <div class="p-8 space-y-6">
+            <div th:replace="${content}"></div>
+        </div>
+    </main>
+
+</body>
+</html>
