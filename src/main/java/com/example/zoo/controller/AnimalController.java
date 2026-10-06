@@ -76,14 +76,23 @@ public class AnimalController {
 
     @PostMapping("/add")
     public String addAnimal(@ModelAttribute Animal animal,
+                            @RequestParam(required = false) List<String> foodPreferencesList,
                             @RequestParam(required = false) String selectedImage,
                             HttpSession session) {
         if (session.getAttribute("zookeeper") == null) {
             return "redirect:/login";
         }
 
+        if (foodPreferencesList != null && !foodPreferencesList.isEmpty()) {
+            animal.setFoodPreference(String.join(", ", foodPreferencesList));
+        }
+
         if (selectedImage != null && !selectedImage.isEmpty()) {
-            animal.setImagePath("/images/animals/" + selectedImage);
+            if (!selectedImage.startsWith("/")) {
+                animal.setImagePath("/images/animals/" + selectedImage);
+            } else {
+                animal.setImagePath(selectedImage);
+            }
         } else if (animal.getImagePath() == null || animal.getImagePath().isEmpty()) {
             animal.setImagePath("/images/animals/" + animal.getSpecies().toLowerCase() + ".png");
         }
@@ -108,9 +117,10 @@ public class AnimalController {
         model.addAttribute("activePage", "animals");
 
         List<String> predefinedImages = Arrays.asList(
-                "elephant.png", "lion.png", "giraffe.png", "zebra.png", "tiger.png",
-                "deer.png", "monkey.png", "bear.png", "penguin.png", "rhino.png",
-                "hippo.png", "parrot.png", "crocodile.png"
+                "lion.png", "tiger.png", "elephant.png", "giraffe.png", "zebra.png",
+                "leopard.png", "bear.png", "wolf.png", "gorilla.png", "rhino.png",
+                "hippo.png", "penguin.png", "flamingo.png", "crocodile.png", "ostrich.png",
+                "kangaroo.png", "panda.png", "redpanda.png", "monkey.png", "otter.png"
         );
         model.addAttribute("predefinedImages", predefinedImages);
     }

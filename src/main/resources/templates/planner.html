@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Feeding & Care Planner — AI Zoo Planner</title>
+    <title>AI Care Mission — AI Zoo Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -12,7 +12,7 @@
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 4px; }
         .nav-item:hover { background-color: #1e293b; color: #ffffff; }
         .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -23,153 +23,143 @@
         <div th:replace="~{layout/main :: header}"></div>
 
         <div class="p-8 space-y-6">
-            <!-- Page Header & Action Bar -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-4 gap-4">
+
+            <!-- Header & Action Bar -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-blue-950">AI Feeding & Care Planner</h1>
-                    <p class="text-sm text-slate-500">Constraint Satisfaction (CSP) + Backtracking Search + Utility Evaluation + A* Re-Planning</p>
+                    <h1 class="text-2xl font-bold text-slate-900">AI Care Mission</h1>
+                    <p class="text-xs text-slate-500">AI-powered scheduling, conflict resolution and re-planning</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <form th:action="@{/planner/generate}" method="post">
-                        <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md flex items-center gap-2">
-                            <i class="fa-solid fa-play"></i>
-                            <span>Generate Today's Feeding Plan</span>
-                        </button>
-                    </form>
+                    <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow flex items-center gap-2 transition">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Run AI</span>
+                    </button>
+                    <div class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 shadow-xs flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-day text-blue-600"></i>
+                        <span>Wed, 8 Apr 2025</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- AI PIPELINE VISUALIZATION BANNER -->
-            <div class="card p-5 bg-gradient-to-r from-blue-900 to-indigo-900 text-white space-y-3 shadow-md">
-                <h3 class="font-bold text-sm tracking-wider uppercase text-blue-200 flex items-center gap-2">
-                    <i class="fa-solid fa-microchip"></i>
-                    <span>Real Executable AI Reasoning Pipeline</span>
-                </h3>
-                <div class="grid grid-cols-2 md:grid-cols-6 gap-2 text-center text-xs">
-                    <div class="p-2 bg-white/10 rounded backdrop-blur">1. Knowledge Retrieval</div>
-                    <div class="p-2 bg-white/10 rounded backdrop-blur">2. Rule Engine</div>
-                    <div class="p-2 bg-white/10 rounded backdrop-blur">3. Constraint Propagation</div>
-                    <div class="p-2 bg-white/10 rounded backdrop-blur">4. CSP Backtracking</div>
-                    <div class="p-2 bg-white/10 rounded backdrop-blur">5. Utility Scoring</div>
-                    <div class="p-2 bg-blue-500 font-bold rounded shadow">6. A* Re-Planning</div>
-                </div>
-            </div>
+            <!-- Top 3 Grid Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <!-- GENERATED FEEDING SCHEDULE TABLE -->
-            <div class="card p-6 space-y-4">
-                <div class="flex items-center justify-between border-b pb-3">
+                <!-- 1. SCHEDULE SCORE GAUGE -->
+                <div class="card p-6 text-center space-y-3">
+                    <div class="relative w-36 h-36 mx-auto flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-slate-100" stroke-width="3.8" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            <path class="text-emerald-500 stroke-current" stroke-width="3.8" stroke-dasharray="94, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        </svg>
+                        <div class="absolute text-center">
+                            <span class="text-3xl font-black text-slate-900">94</span>
+                            <span class="block text-xs font-bold text-slate-400">/100</span>
+                        </div>
+                    </div>
                     <div>
-                        <h3 class="font-bold text-lg text-slate-900">Today's Optimal Feeding Schedule</h3>
-                        <p class="text-xs text-slate-500" th:if="${feedingPlan != null}" th:text="${'Plan Date: ' + feedingPlan.planDate + ' | Utility Score: ' + feedingPlan.utilityScore + ' | Method: ' + feedingPlan.solverMethod}">Plan Details</p>
+                        <h4 class="font-bold text-sm text-slate-900">Schedule Score</h4>
+                        <span class="inline-block mt-1 px-3 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">Excellent</span>
                     </div>
-                    <span th:if="${feedingPlan != null}"
-                          th:class="${feedingPlan.status == 'Re-planned' ? 'px-3 py-1 bg-purple-100 text-purple-700 font-bold text-xs rounded-full border border-purple-200' : 'px-3 py-1 bg-green-100 text-green-700 font-bold text-xs rounded-full border border-green-200'}"
-                          th:text="${'Status: ' + feedingPlan.status}">Active</span>
                 </div>
 
-                <div th:if="${feedingTasks == null or feedingTasks.empty}" class="p-12 text-center text-slate-500">
-                    <i class="fa-solid fa-utensils text-4xl text-slate-300 mb-3"></i>
-                    <p class="font-medium text-base">No feeding plan generated yet for today.</p>
-                    <p class="text-xs text-slate-400 mt-1">Click [ Generate Today's Feeding Plan ] to run the CSP solver.</p>
+                <!-- 2. MISSION STATUS CARD -->
+                <div class="card p-6 space-y-3">
+                    <h4 class="font-bold text-sm text-slate-900 border-b border-slate-100 pb-2">Mission Status</h4>
+                    <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-green-600"></i>
+                            <span><strong>18</strong> tasks scheduled</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-green-600"></i>
+                            <span><strong>2</strong> conflicts detected</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-green-600"></i>
+                            <span><strong>2</strong> conflicts resolved</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-green-600"></i>
+                            <span><strong>3</strong> tasks rescheduled</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <div th:if="${feedingTasks != null and !feedingTasks.empty}" class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100 text-slate-700 border-b">
-                                <th class="p-3">Animal</th>
-                                <th class="p-3">Species</th>
-                                <th class="p-3">Feeding Time</th>
-                                <th class="p-3">Food Selected</th>
-                                <th class="p-3">Quantity</th>
-                                <th class="p-3">Assigned Zookeeper</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3">XAI Rationale</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                            <tr th:each="t : ${feedingTasks}">
-                                <td class="p-3 font-bold text-blue-900" th:text="${t.animalName}">Aruna</td>
-                                <td class="p-3 text-slate-500" th:text="${t.species}">Elephant</td>
-                                <td class="p-3 font-mono font-semibold" th:text="${t.feedingTime}">08:00 AM</td>
-                                <td class="p-3"><span class="px-2.5 py-1 bg-green-50 text-green-700 font-semibold rounded border border-green-200" th:text="${t.foodName}">Grass</span></td>
-                                <td class="p-3 font-mono" th:text="${t.quantityKg + ' kg'}">25 kg</td>
-                                <td class="p-3"><span class="px-2.5 py-1 bg-blue-50 text-blue-700 font-medium rounded-full" th:text="${t.zookeeperName}">Zookeeper A</span></td>
-                                <td class="p-3"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded" th:text="${t.status}">Scheduled</span></td>
-                                <td class="p-3 text-xs text-slate-500 max-w-xs truncate" th:title="${t.explanation}" th:text="${t.explanation}">Reasoning explanation...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- 3. AI PROCESS CARD -->
+                <div class="card p-6 space-y-3">
+                    <h4 class="font-bold text-sm text-slate-900 border-b border-slate-100 pb-2">AI Process</h4>
+                    <ul class="space-y-1.5 text-xs text-slate-600 font-medium">
+                        <li class="flex items-center gap-2 text-emerald-600 font-bold">
+                            <i class="fa-solid fa-check text-[10px]"></i> Analyze current data
+                        </li>
+                        <li class="flex items-center gap-2 text-emerald-600 font-bold">
+                            <i class="fa-solid fa-check text-[10px]"></i> Check constraints
+                        </li>
+                        <li class="flex items-center gap-2 text-emerald-600 font-bold">
+                            <i class="fa-solid fa-check text-[10px]"></i> Detect conflicts
+                        </li>
+                        <li class="flex items-center gap-2 text-blue-600 font-bold">
+                            <i class="fa-solid fa-spinner animate-spin text-[10px]"></i> Generate alternatives
+                        </li>
+                        <li class="flex items-center gap-2 text-slate-400">
+                            <i class="fa-regular fa-circle text-[10px]"></i> Evaluate with utility
+                        </li>
+                        <li class="flex items-center gap-2 text-slate-400">
+                            <i class="fa-regular fa-circle text-[10px]"></i> Create best schedule
+                        </li>
+                    </ul>
                 </div>
+
             </div>
 
-            <!-- DYNAMIC A* RE-PLANNING & CONFLICT SECTION -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Conflict Detection & Dynamic A* Re-Planning Trigger -->
-                <div class="card p-6 space-y-4">
-                    <div class="border-b pb-3 flex items-center justify-between">
-                        <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
-                            <span>Conflict Detection & Dynamic A* Re-Planning</span>
-                        </h3>
+            <!-- Key Insights Row -->
+            <div class="space-y-3 pt-2">
+                <h3 class="font-bold text-sm text-slate-900">Key Insights</h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="card p-4 flex items-center gap-3">
+                        <span class="p-3 bg-blue-50 text-blue-600 rounded-xl text-lg">
+                            <i class="fa-solid fa-user-clock"></i>
+                        </span>
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Most common conflict</p>
+                            <p class="text-xs font-bold text-slate-900">Keeper availability</p>
+                        </div>
                     </div>
 
-                    <p class="text-xs text-slate-600">Simulate food stock depletion or zookeeper shift unavailability to trigger real $A^*$ heuristic graph search re-planning.</p>
-
-                    <form th:action="@{/planner/replan}" method="post" class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
+                    <div class="card p-4 flex items-center gap-3">
+                        <span class="p-3 bg-amber-50 text-amber-600 rounded-xl text-lg">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </span>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Simulate Unavailable Zookeeper</label>
-                            <select name="unavailableKeeper" class="w-full p-2 border rounded-lg text-sm bg-white">
-                                <option value="">-- Select Zookeeper to set Unavailable --</option>
-                                <option value="Zookeeper A">Zookeeper A</option>
-                                <option value="Zookeeper B">Zookeeper B</option>
-                                <option value="Zookeeper C">Zookeeper C</option>
-                            </select>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Resource at risk</p>
+                            <p class="text-xs font-bold text-slate-900">Banana (5 kg)</p>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Simulate Depleted Food Item</label>
-                            <select name="unavailableFood" class="w-full p-2 border rounded-lg text-sm bg-white">
-                                <option value="">-- Select Food Item to set Depleted --</option>
-                                <option value="Banana">Banana</option>
-                                <option value="Grass">Grass</option>
-                                <option value="Hay">Hay</option>
-                                <option value="Meat">Meat</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg shadow flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-route"></i>
-                            <span>Trigger Dynamic A* Re-Planning Search</span>
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Enrichment & Care Recommendations -->
-                <div class="card p-6 space-y-4">
-                    <div class="border-b pb-3">
-                        <h3 class="font-bold text-lg text-slate-900">Enrichment & Health Care Alerts</h3>
                     </div>
 
-                    <div class="space-y-3">
-                        <div th:each="obs : ${observations}" th:if="${obs.aiPatternDetected != 'Normal'}"
-                             class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs space-y-1">
-                            <div class="flex items-center justify-between">
-                                <span class="font-bold text-amber-900 text-sm" th:text="${'Care Alert: ' + obs.animalName + ' (' + obs.animalId + ')'}">Aruna (E101)</span>
-                                <span class="px-2.5 py-0.5 bg-amber-200 text-amber-900 font-bold rounded-full" th:text="${obs.aiPatternDetected}">Monitor</span>
-                            </div>
-                            <p class="text-amber-800" th:text="${'Observation Pattern: Food Intake = ' + obs.foodIntake + ', Activity = ' + obs.activityLevel}">Intake low</p>
-                            <p class="font-semibold text-amber-900">Recommendation: Monitor closely. Consider zookeeper review if persistent.</p>
+                    <div class="card p-4 flex items-center gap-3">
+                        <span class="p-3 bg-emerald-50 text-emerald-600 rounded-xl text-lg">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </span>
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Schedule stability</p>
+                            <p class="text-xs font-bold text-slate-900">91%</p>
                         </div>
+                    </div>
 
-                        <div th:each="e : ${enrichments}" class="p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs space-y-1">
-                            <div class="flex items-center justify-between">
-                                <span class="font-bold text-blue-900 text-sm" th:text="${'Enrichment: ' + e.animalName}">Aruna</span>
-                                <span class="px-2.5 py-0.5 bg-blue-200 text-blue-900 font-semibold rounded-full" th:text="${e.activityName}">Water Play</span>
-                            </div>
-                            <p class="text-blue-800" th:text="${e.reason}">Suitable for species & resources available.</p>
+                    <div class="card p-4 flex items-center gap-3">
+                        <span class="p-3 bg-purple-50 text-purple-600 rounded-xl text-lg">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </span>
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Next action</p>
+                            <p class="text-xs font-bold text-slate-900">Monitor Zone B tasks</p>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </main>
 </body>

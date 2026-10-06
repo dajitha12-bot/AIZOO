@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conflicts & Re-planning — AI Zoo Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .sidebar { width: 280px; background-color: #0f172a; border-right: 1px solid #1e293b; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 4px; }
+        .nav-item:hover { background-color: #1e293b; color: #ffffff; }
+        .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <div th:replace="~{layout/main :: sidebar}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <div th:replace="~{layout/main :: header}"></div>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Page Title Header & Date -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900">Conflicts & Re-planning</h1>
+                    <p class="text-xs text-slate-500">View detected conflicts and how AI resolves them</p>
+                </div>
+                <div class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 shadow-xs flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-day text-blue-600"></i>
+                    <span>Wed, 8 Apr 2025</span>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="flex items-center gap-3">
+                <button class="px-4 py-2 bg-blue-600 text-white font-bold text-xs rounded-xl shadow">
+                    Active Conflicts (2)
+                </button>
+                <button class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl border border-slate-300">
+                    Resolved (5)
+                </button>
+                <button class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl border border-slate-300">
+                    Re-planning History
+                </button>
+            </div>
+
+            <!-- Conflicts Cards List -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- 1. KEEPER CONFLICT CARD -->
+                <div class="card p-6 space-y-4 border-l-4 border-l-red-500 bg-red-50/20">
+                    <div class="flex items-center justify-between border-b border-red-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-user-xmark text-red-600 text-base"></i>
+                            <h4 class="font-bold text-sm text-slate-900">Keeper Conflict</h4>
+                        </div>
+                        <span class="px-2.5 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full">High</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs text-slate-700">
+                        <p class="flex items-center gap-2 font-semibold">
+                            <i class="fa-solid fa-user text-slate-400"></i>
+                            <span>Arun</span>
+                            <span class="text-slate-400">|</span>
+                            <i class="fa-solid fa-clock text-slate-400"></i>
+                            <span>09:00 AM</span>
+                        </p>
+                        <p class="text-slate-600"><strong>Tasks:</strong> Feeding (Zone A) + Cleaning (Zone B)</p>
+                    </div>
+
+                    <!-- AI Solution Box -->
+                    <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600">AI Solution</span>
+                        <p class="text-xs font-semibold text-slate-800">Reassign cleaning to Priya at 09:00 AM</p>
+                        <div class="pt-2 text-right">
+                            <span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full inline-block">✓ Resolved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. RESOURCE CONFLICT CARD -->
+                <div class="card p-6 space-y-4 border-l-4 border-l-amber-500 bg-amber-50/20">
+                    <div class="flex items-center justify-between border-b border-amber-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-box text-amber-600 text-base"></i>
+                            <h4 class="font-bold text-sm text-slate-900">Resource Conflict</h4>
+                        </div>
+                        <span class="px-2.5 py-0.5 bg-amber-500 text-white text-[10px] font-bold rounded-full">Medium</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs text-slate-700">
+                        <p class="flex items-center gap-2 font-semibold">
+                            <i class="fa-solid fa-cubes text-slate-400"></i>
+                            <span>Cleaning Kit</span>
+                            <span class="text-slate-400">|</span>
+                            <i class="fa-solid fa-clock text-slate-400"></i>
+                            <span>10:00 AM</span>
+                        </p>
+                        <p class="text-slate-600"><strong>Tasks:</strong> Zone A + Zone B</p>
+                    </div>
+
+                    <!-- AI Solution Box -->
+                    <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600">AI Solution</span>
+                        <p class="text-xs font-semibold text-slate-800">Move Zone B task to 10:30 AM</p>
+                        <div class="pt-2 text-right">
+                            <span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full inline-block">✓ Resolved</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

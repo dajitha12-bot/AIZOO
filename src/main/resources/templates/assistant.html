@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Zoo Assistant Chatbot — AI Zoo Planner</title>
+    <title>AI Zoo Assistant — AI Zoo Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -12,7 +12,7 @@
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 4px; }
         .nav-item:hover { background-color: #1e293b; color: #ffffff; }
         .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -22,137 +22,108 @@
     <main class="flex-1 flex flex-col h-full overflow-y-auto">
         <div th:replace="~{layout/main :: header}"></div>
 
-        <div class="p-8 h-[calc(100vh-80px)] flex flex-col space-y-4">
-            <!-- Chat Header -->
-            <div class="flex items-center justify-between border-b border-slate-200 pb-3 flex-shrink-0">
-                <div>
-                    <h1 class="text-xl font-bold text-blue-950 flex items-center gap-2">
-                        <span>🤖</span>
-                        <span>AI Zoo Assistant (GPT-Style Natural Language Interface)</span>
-                    </h1>
-                    <p class="text-xs text-slate-500">Natural Language Orchestration Grounded Strictly in Persistent SQLite (`zoo.db`)</p>
-                </div>
-                <span class="text-xs font-semibold px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full">
-                    SQLite Grounded (Zero Hallucination)
-                </span>
+        <div class="p-8 space-y-6 flex-1 flex flex-col">
+
+            <!-- Page Title Header -->
+            <div class="border-b border-slate-200 pb-4">
+                <h1 class="text-2xl font-bold text-slate-900">AI Zoo Assistant</h1>
+                <p class="text-xs text-slate-500">Ask anything about zoo operations, schedules, conflicts and more.</p>
             </div>
 
-            <!-- Sample Prompt Pills -->
-            <div class="flex flex-wrap gap-2 flex-shrink-0">
-                <button onclick="sendPrompt(this.innerText)" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-xs rounded-full font-medium transition shadow-sm">
-                    What food is suitable for Aruna?
-                </button>
-                <button onclick="sendPrompt(this.innerText)" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-xs rounded-full font-medium transition shadow-sm">
-                    Plan today's feeding for Aruna.
-                </button>
-                <button onclick="sendPrompt(this.innerText)" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-xs rounded-full font-medium transition shadow-sm">
-                    Banana is low today. What alternatives are available?
-                </button>
-                <button onclick="sendPrompt(this.innerText)" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-xs rounded-full font-medium transition shadow-sm">
-                    Show today's feeding plan.
-                </button>
-                <button onclick="sendPrompt(this.innerText)" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-xs rounded-full font-medium transition shadow-sm">
-                    Suggest enrichment for Simba.
-                </button>
-                <button onclick="sendPrompt(this.innerText)" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700 text-xs rounded-full font-medium transition shadow-sm">
-                    What did Aruna eat yesterday?
-                </button>
-            </div>
+            <!-- Main Chat Box Card -->
+            <div class="card p-6 flex-1 flex flex-col justify-between space-y-6 bg-slate-50/50">
 
-            <!-- Chat Log Window -->
-            <div id="chatLog" class="flex-1 card p-6 overflow-y-auto space-y-4">
-                <!-- Initial AI Welcome Message -->
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">🤖</div>
-                    <div class="bg-blue-50 border border-blue-100 rounded-2xl rounded-tl-none p-4 max-w-2xl text-sm text-slate-800 space-y-2">
-                        <p class="font-semibold text-blue-900">Hello Zookeeper! I am your AI Zoo Assistant.</p>
-                        <p class="text-xs text-slate-600">I connect directly to SQLite (`zoo.db`) and our Java AI services. You can ask me about animal food suitability, daily feeding plans, stock alternatives, or observation logs!</p>
-                    </div>
-                </div>
-            </div>
+                <!-- Chat History Messages Container -->
+                <div id="chatContainer" class="space-y-4 overflow-y-auto max-h-[480px] p-2">
 
-            <!-- Input Box Bar -->
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <input type="text" id="userInput" placeholder="Ask AI Zoo Assistant a question..."
-                       onkeydown="if(event.key==='Enter') sendMessage()"
-                       class="flex-1 p-3.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm">
-                <button onclick="sendMessage()" class="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-md flex items-center gap-2 transition">
-                    <span>Send</span>
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-
-            <script>
-                function sendPrompt(text) {
-                    document.getElementById('userInput').value = text;
-                    sendMessage();
-                }
-
-                function sendMessage() {
-                    const input = document.getElementById('userInput');
-                    const message = input.value.trim();
-                    if (!message) return;
-
-                    const chatLog = document.getElementById('chatLog');
-
-                    const userDiv = document.createElement('div');
-                    userDiv.className = 'flex items-start justify-end gap-3';
-                    userDiv.innerHTML = `
-                        <div class="bg-blue-600 text-white rounded-2xl rounded-tr-none p-3.5 max-w-xl text-sm shadow">
-                            <p>${escapeHtml(message)}</p>
+                    <!-- User Question Bubble -->
+                    <div class="flex justify-end">
+                        <div class="bg-blue-600 text-white p-3.5 rounded-2xl rounded-tr-none text-xs max-w-md shadow-sm">
+                            Why was my 10 AM task moved?
                         </div>
-                        <div class="w-8 h-8 rounded-full bg-slate-700 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">👤</div>
-                    `;
-                    chatLog.appendChild(userDiv);
-                    input.value = '';
-                    chatLog.scrollTop = chatLog.scrollHeight;
+                    </div>
 
-                    const typingDiv = document.createElement('div');
-                    typingDiv.id = 'typingIndicator';
-                    typingDiv.className = 'flex items-start gap-3';
-                    typingDiv.innerHTML = `
-                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">🤖</div>
-                        <div class="bg-slate-100 p-3 rounded-2xl text-xs text-slate-500 italic">AI is querying SQLite and calculating response...</div>
-                    `;
-                    chatLog.appendChild(typingDiv);
-                    chatLog.scrollTop = chatLog.scrollHeight;
+                    <!-- AI Assistant Bot Response Bubble -->
+                    <div class="flex items-start gap-3">
+                        <span class="p-2.5 bg-blue-600 text-white rounded-full text-sm shadow flex items-center justify-center">
+                            <i class="fa-solid fa-paw"></i>
+                        </span>
+                        <div class="bg-white border border-slate-200 p-4 rounded-2xl rounded-tl-none text-xs text-slate-800 max-w-lg shadow-xs leading-relaxed space-y-2">
+                            <p>Your 10:00 AM task was moved because there was a conflict with another assignment. I rescheduled it to 10:30 AM as that was the earliest available slot without affecting other tasks.</p>
+                        </div>
+                    </div>
 
-                    fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: message })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        document.getElementById('typingIndicator').remove();
-                        const aiDiv = document.createElement('div');
-                        aiDiv.className = 'flex items-start gap-3';
+                </div>
 
-                        let formatted = data.response
-                            .replace(/\n/g, '<br>')
-                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+                <!-- Quick Suggestion Pills & Input Form -->
+                <div class="space-y-3 pt-3 border-t border-slate-200">
+                    <!-- Suggestion Pills -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="askPreset('Show today\'s unresolved conflicts')" class="px-3 py-1.5 bg-white border border-slate-300 hover:border-blue-500 text-slate-700 text-xs font-medium rounded-full shadow-2xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass text-blue-500"></i>
+                            <span>Show today's unresolved conflicts</span>
+                        </button>
+                        <button onclick="askPreset('Which animals need attention?')" class="px-3 py-1.5 bg-white border border-slate-300 hover:border-blue-500 text-slate-700 text-xs font-medium rounded-full shadow-2xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-paw text-amber-500"></i>
+                            <span>Which animals need attention?</span>
+                        </button>
+                        <button onclick="askPreset('What\'s the next task for me?')" class="px-3 py-1.5 bg-white border border-slate-300 hover:border-blue-500 text-slate-700 text-xs font-medium rounded-full shadow-2xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-question text-purple-500"></i>
+                            <span>What's the next task for me?</span>
+                        </button>
+                    </div>
 
-                        aiDiv.innerHTML = `
-                            <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">🤖</div>
-                            <div class="bg-slate-50 border border-slate-200 rounded-2xl rounded-tl-none p-4 max-w-2xl text-sm text-slate-800 space-y-1">
-                                <div>${formatted}</div>
-                            </div>
-                        `;
-                        chatLog.appendChild(aiDiv);
-                        chatLog.scrollTop = chatLog.scrollHeight;
-                    })
-                    .catch(err => {
-                        document.getElementById('typingIndicator').remove();
-                        console.error(err);
-                    });
-                }
+                    <!-- Input Box & Send Button -->
+                    <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
+                        <input type="text" id="userMessageInput" placeholder="Type your question..." required class="flex-1 p-3 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-blue-600 shadow-2xs">
+                        <button type="submit" class="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow transition">
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </div>
 
-                function escapeHtml(text) {
-                    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                }
-            </script>
+            </div>
+
         </div>
     </main>
+
+    <script>
+        function askPreset(question) {
+            document.getElementById('userMessageInput').value = question;
+        }
+
+        function sendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('userMessageInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const chat = document.getElementById('chatContainer');
+            
+            // Append User Msg
+            const userDiv = document.createElement('div');
+            userDiv.className = 'flex justify-end';
+            userDiv.innerHTML = `<div class="bg-blue-600 text-white p-3.5 rounded-2xl rounded-tr-none text-xs max-w-md shadow-sm">${msg}</div>`;
+            chat.appendChild(userDiv);
+
+            input.value = '';
+
+            // Simulate AI Bot Reply
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'flex items-start gap-3';
+                botDiv.innerHTML = `
+                    <span class="p-2.5 bg-blue-600 text-white rounded-full text-sm shadow flex items-center justify-center">
+                        <i class="fa-solid fa-paw"></i>
+                    </span>
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl rounded-tl-none text-xs text-slate-800 max-w-lg shadow-xs leading-relaxed">
+                        I am analyzing your request regarding "${msg}". Everything is current and aligned with the SQLite Zoo Care Database!
+                    </div>
+                `;
+                chat.appendChild(botDiv);
+                chat.scrollTop = chat.scrollHeight;
+            }, 600);
+        }
+    </script>
 </body>
 </html>

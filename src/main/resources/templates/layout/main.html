@@ -2,85 +2,114 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Layout Components</title>
+    <title>Layout Components — AI Zoo Planner</title>
 </head>
 <body>
 
-    <!-- SIDEBAR FRAGMENT -->
+    <!-- SIDEBAR FRAGMENT (MATCHING ALL 8 PAGES EXACTLY) -->
     <aside th:fragment="sidebar" class="sidebar flex flex-col justify-between h-full p-4 flex-shrink-0 bg-slate-900 text-white border-r border-slate-800 w-[280px]">
         <div>
             <!-- Header Logo -->
             <div class="flex items-center gap-3 px-3 py-4 mb-6 border-b border-slate-800/80">
-                <span class="text-3xl">🦁</span>
+                <span class="p-2 bg-blue-600 rounded-xl text-white text-xl flex items-center justify-center shadow">
+                    <i class="fa-solid fa-paw"></i>
+                </span>
                 <div>
-                    <h1 class="text-lg font-bold text-white leading-tight">AI ZOO PLANNER</h1>
-                    <p class="text-xs text-blue-400 font-medium">Intelligent Decision System</p>
+                    <h1 class="text-base font-bold text-white tracking-wide leading-tight">AI ZOO PLANNER</h1>
+                    <p class="text-[11px] text-blue-400 font-medium">Zookeeper Portal</p>
                 </div>
             </div>
 
-            <!-- Navigation Links -->
+            <!-- Navigation Links (All 8 Pages) -->
             <nav class="space-y-1">
                 <a th:href="@{/dashboard}" class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active' : ''">
-                    <span class="text-xl">📊</span>
-                    <span>Live Dashboard</span>
+                    <i class="fa-solid fa-house text-sm w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/schedule}" class="nav-item" th:classappend="${activePage == 'schedule'} ? 'active' : ''">
+                    <i class="fa-solid fa-calendar-days text-sm w-5"></i>
+                    <span>My Schedule</span>
                 </a>
 
                 <a th:href="@{/animals}" class="nav-item" th:classappend="${activePage == 'animals'} ? 'active' : ''">
-                    <span class="text-xl">🐘</span>
-                    <span>Animals & AI Knowledge</span>
+                    <i class="fa-solid fa-paw text-sm w-5"></i>
+                    <span>Animals</span>
                 </a>
 
                 <a th:href="@{/food-observations}" class="nav-item" th:classappend="${activePage == 'food-observations'} ? 'active' : ''">
-                    <span class="text-xl">🍎</span>
+                    <i class="fa-solid fa-clipboard-list text-sm w-5"></i>
                     <span>Today's Inputs</span>
                 </a>
 
                 <a th:href="@{/planner}" class="nav-item" th:classappend="${activePage == 'planner'} ? 'active' : ''">
-                    <span class="text-xl">🧠</span>
+                    <i class="fa-solid fa-brain text-sm w-5"></i>
                     <span>AI Care Mission</span>
                 </a>
 
                 <a th:href="@{/scenario-planner}" class="nav-item" th:classappend="${activePage == 'scenario-planner'} ? 'active' : ''">
-                    <span class="text-xl">🔮</span>
-                    <span>AI Scenario Planner</span>
+                    <i class="fa-solid fa-flask text-sm w-5"></i>
+                    <span>Scenario Planner</span>
+                </a>
+
+                <a th:href="@{/conflicts}" class="nav-item" th:classappend="${activePage == 'conflicts'} ? 'active' : ''">
+                    <i class="fa-solid fa-triangle-exclamation text-sm w-5"></i>
+                    <span>Conflicts & Re-planning</span>
                 </a>
 
                 <a th:href="@{/assistant}" class="nav-item" th:classappend="${activePage == 'assistant'} ? 'active' : ''">
-                    <span class="text-xl">🤖</span>
-                    <span>AI Zoo Assistant</span>
+                    <i class="fa-solid fa-robot text-sm w-5"></i>
+                    <span>AI Assistant</span>
                 </a>
             </nav>
         </div>
 
         <!-- Sidebar Bottom Footer -->
         <div class="pt-4 border-t border-slate-800/80">
-            <div class="flex items-center justify-between px-3 py-2 bg-slate-800/90 rounded-lg">
+            <div class="flex items-center justify-between px-3 py-2 bg-slate-800/90 rounded-xl">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow">
-                        👤
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Priya" class="w-8 h-8 rounded-full object-cover border border-blue-400">
                     <div>
-                        <p class="text-sm font-semibold text-white" th:text="${session != null and session.zookeeper != null} ? ${session.zookeeper} : 'Zookeeper'">Zookeeper</p>
-                        <p class="text-xs text-blue-300">Active Session</p>
+                        <p class="text-xs font-bold text-white" th:text="${session != null and session.zookeeper != null} ? ${session.zookeeper} : 'Priya'">Priya</p>
+                        <p class="text-[10px] text-blue-300">Zookeeper (Zone B)</p>
                     </div>
                 </div>
-                <a th:href="@{/logout}" class="text-slate-400 hover:text-red-400 text-sm p-1" title="Logout">
+                <a th:href="@{/logout}" class="text-slate-400 hover:text-red-400 text-xs p-1" title="Logout">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
         </div>
     </aside>
 
-    <!-- HEADER FRAGMENT -->
-    <header th:fragment="header" class="bg-blue-900 text-white border-b border-blue-950 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+    <!-- HEADER FRAGMENT (MATCHING ALL 8 PAGES EXACTLY) -->
+    <header th:fragment="header" class="bg-white border-b border-slate-200 px-8 py-3 flex items-center justify-between sticky top-0 z-20 shadow-xs">
         <div>
-            <h2 class="text-xl font-bold text-white" th:text="${headerTitle} ?: 'Dashboard'">Dashboard</h2>
-            <p class="text-xs text-blue-200">AI-Powered Intelligent Zoo Care & Decision Support</p>
+            <h2 class="text-xl font-bold text-slate-900" th:text="${headerTitle} ?: 'Dashboard'">Live Operations Dashboard</h2>
+            <p class="text-xs text-slate-500" th:text="${headerSubtitle} ?: 'Here\'s what\'s happening at the zoo today.'">AI-Powered Intelligent Zoo Care & Decision Support</p>
         </div>
         <div class="flex items-center gap-4">
-            <span class="text-xs font-semibold px-3 py-1 bg-blue-950/80 text-emerald-400 rounded-full border border-blue-800/60 flex items-center gap-1.5 shadow-inner">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> SQLite Active (zoo.db)
-            </span>
+            <!-- Search Bar (on page 3 & others) -->
+            <div class="relative hidden sm:block">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                <input type="text" placeholder="Search animals, species, or features..." class="pl-8 pr-4 py-1.5 bg-slate-100 border border-slate-200 rounded-lg text-xs w-64 focus:outline-none focus:border-blue-500">
+            </div>
+
+            <!-- Notifications Bell -->
+            <div class="relative">
+                <button class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 relative">
+                    <i class="fa-solid fa-bell text-xs"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white">3</span>
+                </button>
+            </div>
+
+            <!-- Profile Badge -->
+            <div class="flex items-center gap-2 border-l border-slate-200 pl-4">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Priya" class="w-8 h-8 rounded-full object-cover border border-blue-600">
+                <div class="hidden md:block">
+                    <p class="text-xs font-bold text-slate-900 leading-tight">Priya</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Zookeeper</p>
+                </div>
+            </div>
         </div>
     </header>
 

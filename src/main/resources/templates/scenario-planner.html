@@ -12,399 +12,154 @@
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 4px; }
         .nav-item:hover { background-color: #1e293b; color: #ffffff; }
         .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <!-- Include Sidebar Fragment -->
     <div th:replace="~{layout/main :: sidebar}"></div>
 
-    <!-- MAIN CONTENT AREA -->
     <main class="flex-1 flex flex-col h-full overflow-y-auto">
-        <!-- Include Header Fragment -->
         <div th:replace="~{layout/main :: header}"></div>
 
         <div class="p-8 space-y-6">
 
-            <!-- PAGE HEADER -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-4 gap-4">
+            <!-- Page Title Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-blue-950 flex items-center gap-2">
-                        <span>🔮</span>
-                        <span>AI Scenario Planner</span>
-                    </h1>
-                    <p class="text-sm text-slate-500">Simulate possible changes and analyze their impact before updating the live zoo care plan.</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full border border-amber-200 flex items-center gap-1">
-                        <i class="fa-solid fa-flask"></i> Sandbox Simulation Workspace
-                    </span>
+                    <h1 class="text-2xl font-bold text-slate-900">AI Scenario Planner</h1>
+                    <p class="text-xs text-slate-500">Test different scenarios and see AI recommendations</p>
                 </div>
             </div>
 
-            <!-- LIVE STATUS CARDS -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <div class="p-3 bg-white border rounded-lg text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Food Available</p>
-                    <p class="text-lg font-bold text-blue-900 mt-0.5" th:text="${availableFoodsCount + ' Items'}">5 Items</p>
-                </div>
-                <div class="p-3 bg-white border rounded-lg text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Keepers On Duty</p>
-                    <p class="text-lg font-bold text-emerald-700 mt-0.5" th:text="${availableKeepersCount + ' Keepers'}">3 Keepers</p>
-                </div>
-                <div class="p-3 bg-white border rounded-lg text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Live Plan Status</p>
-                    <p class="text-lg font-bold text-indigo-700 mt-0.5" th:text="${livePlan != null ? livePlan.status : 'None'}">Active</p>
-                </div>
-                <div class="p-3 bg-white border rounded-lg text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Active Tasks</p>
-                    <p class="text-lg font-bold text-slate-900 mt-0.5" th:text="${activeTasksCount + ' Tasks'}">5 Tasks</p>
-                </div>
-                <div class="p-3 bg-white border rounded-lg text-center">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Live Conflicts</p>
-                    <p class="text-lg font-bold text-amber-600 mt-0.5" th:text="${activeConflictsCount}">0</p>
-                </div>
-            </div>
-
-            <!-- SCENARIO BUILDER FORM -->
+            <!-- "What if...?" Simulation Controls Card -->
             <div class="card p-6 space-y-4">
-                <div class="border-b pb-3">
-                    <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-blue-600"></i>
-                        <span>Create a Scenario</span>
-                    </h3>
-                    <p class="text-xs text-slate-500">Select a hypothetical condition change to simulate in the AI Reasoning sandbox.</p>
-                </div>
+                <h3 class="font-bold text-sm text-slate-900">What if...?</h3>
 
-                <form th:action="@{/scenario-planner/run}" method="post" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
+                <form th:action="@{/scenario-planner/simulate}" method="post" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-4">
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Scenario Type</label>
-                            <select name="scenarioType" id="scenarioTypeSelect" onchange="toggleScenarioInputs()" class="w-full p-2.5 border rounded-lg text-sm bg-slate-50">
-                                <option value="FOOD_QUANTITY">1. Food Availability Change</option>
-                                <option value="KEEPER_UNAVAILABLE">2. Zookeeper Availability Change</option>
-                                <option value="TIME_CHANGE">3. Feeding Time Change</option>
-                                <option value="FOOD_UNAVAILABLE">4. Food Unavailability</option>
-                                <option value="ANIMAL_REQUIREMENT">5. Animal Requirement Change</option>
-                                <option value="MULTIPLE">6. Multiple Changes</option>
+                            <select name="scenarioType" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-800">
+                                <option value="Keeper unavailable">Keeper unavailable</option>
+                                <option value="Food shortage">Food shortage</option>
+                                <option value="Animal medical checkup">Animal medical checkup</option>
                             </select>
                         </div>
 
-                        <!-- Dynamic Food Input -->
-                        <div id="foodInputGroup">
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Select Food Item</label>
-                            <select name="foodName" class="w-full p-2.5 border rounded-lg text-sm bg-white">
-                                <option th:each="f : ${foods}" th:value="${f.name}" th:text="${f.name + ' (Current: ' + f.totalQuantity + ' ' + f.unit + ')'}">Banana</option>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Select Keeper</label>
+                            <select name="keeper" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-800">
+                                <option value="Arun">Arun</option>
+                                <option value="Priya">Priya</option>
+                                <option value="Ravi">Ravi</option>
                             </select>
                         </div>
 
-                        <!-- Dynamic Quantity Input -->
-                        <div id="qtyInputGroup">
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Hypothetical Quantity (kg)</label>
-                            <input type="number" step="0.1" name="scenarioFoodQty" value="3.0" class="w-full p-2.5 border rounded-lg text-sm bg-white">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">From</label>
+                            <input type="text" value="10:00 AM" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-800">
                         </div>
 
-                        <!-- Dynamic Keeper Input -->
-                        <div id="keeperInputGroup" class="hidden">
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Select Zookeeper</label>
-                            <select name="zookeeperName" class="w-full p-2.5 border rounded-lg text-sm bg-white">
-                                <option th:each="z : ${zookeepers}" th:value="${z.name}" th:text="${z.name}">Zookeeper A</option>
-                            </select>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">To</label>
+                            <input type="text" value="12:00 PM" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-slate-800">
                         </div>
 
-                        <!-- Dynamic Time Input -->
-                        <div id="timeInputGroup" class="hidden">
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Hypothetical Time</label>
-                            <select name="scenarioFeedingTime" class="w-full p-2.5 border rounded-lg text-sm bg-white">
-                                <option value="08:30 AM">08:30 AM</option>
-                                <option value="11:00 AM">11:00 AM</option>
-                                <option value="02:00 PM">02:00 PM</option>
-                            </select>
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition">
+                                Run Simulation
+                            </button>
                         </div>
-                    </div>
-
-                    <div class="pt-2 flex justify-end">
-                        <button type="submit" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md flex items-center gap-2 transition">
-                            <i class="fa-solid fa-flask"></i>
-                            <span>RUN AI SCENARIO</span>
-                        </button>
                     </div>
                 </form>
             </div>
 
-            <script>
-                function toggleScenarioInputs() {
-                    const type = document.getElementById('scenarioTypeSelect').value;
-                    const foodGrp = document.getElementById('foodInputGroup');
-                    const qtyGrp = document.getElementById('qtyInputGroup');
-                    const keeperGrp = document.getElementById('keeperInputGroup');
-                    const timeGrp = document.getElementById('timeInputGroup');
+            <!-- Simulation Results & Best Plan Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                    foodGrp.classList.add('hidden');
-                    qtyGrp.classList.add('hidden');
-                    keeperGrp.classList.add('hidden');
-                    timeGrp.classList.add('hidden');
-
-                    if (type === 'FOOD_QUANTITY' || type === 'FOOD_UNAVAILABLE') {
-                        foodGrp.classList.remove('hidden');
-                        qtyGrp.classList.remove('hidden');
-                    } else if (type === 'KEEPER_UNAVAILABLE') {
-                        keeperGrp.classList.remove('hidden');
-                    } else if (type === 'TIME_CHANGE') {
-                        timeGrp.classList.remove('hidden');
-                    } else {
-                        foodGrp.classList.remove('hidden');
-                        qtyGrp.classList.remove('hidden');
-                    }
-                }
-            </script>
-
-            <!-- SCENARIO RESULTS -->
-            <div th:if="${scenarioResult != null}" class="space-y-6">
-
-                <!-- Scenario Title Banner -->
-                <div class="card p-5 bg-gradient-to-r from-indigo-900 to-blue-900 text-white space-y-2 shadow-lg">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold px-3 py-1 bg-amber-400 text-amber-950 rounded-full">SCENARIO SIMULATION ACTIVE</span>
-                        <span class="text-xs font-mono text-indigo-200">Temporary In-Memory State</span>
-                    </div>
-                    <h3 class="text-xl font-bold" th:text="${scenarioResult.scenarioTitle}">Banana reduced from 10 kg to 3 kg</h3>
-                    <p class="text-xs text-indigo-200" th:text="${scenarioResult.scenarioDescription}">Impact analysis summary</p>
-                </div>
-
-                <!-- SIDE-BY-SIDE PLAN COMPARISON -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-                    <!-- CURRENT LIVE PLAN -->
-                    <div class="card p-6 space-y-3">
-                        <div class="border-b pb-2 flex items-center justify-between">
-                            <h4 class="font-bold text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-database text-slate-400"></i>
-                                <span>CURRENT LIVE PLAN</span>
-                            </h4>
-                            <span class="text-xs px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-full font-mono">SQLite Persistent</span>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs border-collapse">
-                                <thead>
-                                    <tr class="bg-slate-50 text-slate-600 border-b">
-                                        <th class="p-2">Animal</th>
-                                        <th class="p-2">Time</th>
-                                        <th class="p-2">Food</th>
-                                        <th class="p-2">Portion</th>
-                                        <th class="p-2">Keeper</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100">
-                                    <tr th:each="t : ${scenarioResult.currentTasks}">
-                                        <td class="p-2 font-bold text-blue-900" th:text="${t.animalName}">Aruna</td>
-                                        <td class="p-2" th:text="${t.feedingTime}">08:00 AM</td>
-                                        <td class="p-2 font-medium" th:text="${t.foodName}">Grass</td>
-                                        <td class="p-2" th:text="${t.quantityKg + ' kg'}">25 kg</td>
-                                        <td class="p-2" th:text="${t.zookeeperName}">Keeper A</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <!-- Left 2 Columns: Simulation Results Table -->
+                <div class="lg:col-span-2 card p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-sm text-slate-900">Simulation Results</h3>
+                        <span class="text-xs text-slate-500 font-medium">Affected Tasks: <strong>5</strong></span>
                     </div>
 
-                    <!-- SIMULATED SCENARIO PLAN -->
-                    <div class="card p-6 space-y-3 border-2 border-indigo-500">
-                        <div class="border-b pb-2 flex items-center justify-between">
-                            <h4 class="font-bold text-indigo-900 flex items-center gap-2">
-                                <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i>
-                                <span>SIMULATED SCENARIO PLAN</span>
-                            </h4>
-                            <span class="text-xs px-2.5 py-0.5 bg-indigo-100 text-indigo-700 font-bold rounded-full">A* Search Computed</span>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs border-collapse">
-                                <thead>
-                                    <tr class="bg-indigo-50 text-indigo-900 border-b">
-                                        <th class="p-2">Animal</th>
-                                        <th class="p-2">Time</th>
-                                        <th class="p-2">Food</th>
-                                        <th class="p-2">Portion</th>
-                                        <th class="p-2">Keeper</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-indigo-50">
-                                    <tr th:each="t : ${scenarioResult.scenarioTasks}">
-                                        <td class="p-2 font-bold text-indigo-900" th:text="${t.animalName}">Aruna</td>
-                                        <td class="p-2 font-mono" th:text="${t.feedingTime}">08:00 AM</td>
-                                        <td class="p-2 font-bold text-emerald-700" th:text="${t.foodName}">Grass</td>
-                                        <td class="p-2 font-mono" th:text="${t.quantityKg + ' kg'}">25 kg</td>
-                                        <td class="p-2 font-semibold text-blue-700" th:text="${t.zookeeperName}">Keeper A</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- IMPACT ANALYSIS DASHBOARD -->
-                <div class="card p-6 space-y-4">
-                    <div class="border-b pb-3">
-                        <h3 class="font-bold text-lg text-slate-900">Scenario Impact Analysis Summary</h3>
-                    </div>
-
-                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-3 text-center">
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Affected Animals</p>
-                            <p class="text-xl font-bold text-blue-900 mt-1" th:text="${scenarioResult.affectedAnimals}">2</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Affected Tasks</p>
-                            <p class="text-xl font-bold text-indigo-900 mt-1" th:text="${scenarioResult.affectedTasks}">3</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Food Substitutions</p>
-                            <p class="text-xl font-bold text-amber-700 mt-1" th:text="${scenarioResult.foodSubstitutions}">2</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Keeper Changes</p>
-                            <p class="text-xl font-bold text-sky-700 mt-1" th:text="${scenarioResult.keeperChanges}">1</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Time Changes</p>
-                            <p class="text-xl font-bold text-purple-700 mt-1" th:text="${scenarioResult.timeChanges}">1</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">New Conflicts</p>
-                            <p class="text-xl font-bold text-rose-600 mt-1" th:text="${scenarioResult.newConflicts}">0</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Resolved Conflicts</p>
-                            <p class="text-xl font-bold text-emerald-600 mt-1" th:text="${scenarioResult.resolvedConflicts}">2</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Plan Feasible</p>
-                            <p class="text-xl font-bold text-emerald-600 mt-1" th:text="${scenarioResult.feasible ? 'YES' : 'NO'}">YES</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-lg">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase">Stability</p>
-                            <p class="text-xl font-bold text-blue-700 mt-1" th:text="${scenarioResult.planStability}">HIGH</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RESOURCE IMPACT (BEFORE VS SCENARIO) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                    <!-- Food Resource Delta -->
-                    <div class="card p-6 space-y-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-2">Food Inventory Resource Delta</h4>
-                        <div class="space-y-3">
-                            <div th:each="entry : ${scenarioResult.foodStockBefore}" class="space-y-1">
-                                <div class="flex justify-between text-xs font-semibold">
-                                    <span class="text-slate-800" th:text="${entry.key}">Banana</span>
-                                    <span class="text-slate-600" th:text="${'Current: ' + entry.value + ' kg  ➜  Scenario: ' + (scenarioResult.foodStockScenario[entry.key] != null ? scenarioResult.foodStockScenario[entry.key] : entry.value) + ' kg'}">10kg -> 3kg</span>
-                                </div>
-                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                                    <div class="bg-blue-600 h-2.5 rounded-full" th:style="${'width: ' + Math.min(100, (entry.value * 2)) + '%'}"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Zookeeper Workload Delta -->
-                    <div class="card p-6 space-y-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-2">Zookeeper Task Workload Delta</h4>
-                        <div class="space-y-3">
-                            <div th:each="entry : ${scenarioResult.keeperWorkloadBefore}" class="space-y-1">
-                                <div class="flex justify-between text-xs font-semibold">
-                                    <span class="text-slate-800" th:text="${entry.key}">Zookeeper A</span>
-                                    <span class="text-slate-600" th:text="${'Current Workload: ' + entry.value + ' tasks  ➜  Scenario Workload: ' + (scenarioResult.keeperWorkloadScenario[entry.key] != null ? scenarioResult.keeperWorkloadScenario[entry.key] : entry.value) + ' tasks'}">4 tasks -> 3 tasks</span>
-                                </div>
-                                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                                    <div class="bg-indigo-600 h-2.5 rounded-full" th:style="${'width: ' + (entry.value * 25) + '%'}"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ALTERNATIVE SCENARIO PLANS -->
-                <div class="card p-6 space-y-4">
-                    <div class="border-b pb-3">
-                        <h3 class="font-bold text-lg text-slate-900">Evaluated Alternative Scenario Plans</h3>
-                        <p class="text-xs text-slate-500">The Utility Engine evaluated multiple feasible candidate strategies and selected the preferred plan.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div th:each="alt : ${scenarioResult.alternativePlans}"
-                             th:class="${alt.preferred ? 'p-5 border-2 border-emerald-500 bg-emerald-50/50 rounded-xl space-y-3 relative shadow-md' : 'p-5 border border-slate-200 bg-white rounded-xl space-y-3'}">
-                            <span th:if="${alt.preferred}" class="absolute -top-3 right-4 px-3 py-0.5 bg-emerald-600 text-white font-bold text-[10px] rounded-full uppercase tracking-wider">★ PREFERRED PLAN</span>
-                            <h4 class="font-bold text-slate-900 text-sm" th:text="${alt.planName}">PLAN A</h4>
-                            <p class="text-xs text-slate-600" th:text="${alt.strategy}">Strategy description...</p>
-                            <div class="pt-2 border-t border-slate-200 text-xs space-y-1">
-                                <div class="flex justify-between"><span>Utility Score:</span><strong class="text-blue-900" th:text="${alt.utilityScore}">140.0</strong></div>
-                                <div class="flex justify-between"><span>Disruption Changes:</span><strong th:text="${alt.changesCount}">2</strong></div>
-                                <div class="flex justify-between"><span>Food Substitutions:</span><strong th:text="${alt.foodChanges}">1</strong></div>
-                                <div class="flex justify-between"><span>Time Shifts:</span><strong th:text="${alt.timeChanges}">0</strong></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- WHY DID THE AI CHOOSE THIS? -->
-                <div class="card p-6 space-y-3 bg-blue-50 border-blue-200">
-                    <h4 class="font-bold text-blue-950 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-question text-blue-600"></i>
-                        <span>WHY DID THE AI CHOOSE THIS SCENARIO PLAN? [ WHY? ]</span>
-                    </h4>
-                    <ul class="space-y-1.5 text-xs text-blue-900">
-                        <li th:each="r : ${scenarioResult.whyRationales}" class="flex items-center gap-2">
-                            <i class="fa-solid fa-check text-emerald-600 font-bold"></i>
-                            <span th:text="${r}">Rationale line</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- SCENARIO TIMELINE -->
-                <div class="card p-6 space-y-4">
-                    <h4 class="font-bold text-slate-900 border-b pb-2">Temporary Scenario Reasoning Timeline</h4>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
-                                <tr class="bg-slate-50 text-slate-600 border-b">
-                                    <th class="p-2">Time</th>
-                                    <th class="p-2">Reasoning Stage</th>
-                                    <th class="p-2">Stage Details</th>
+                                <tr class="border-b border-slate-200 text-slate-400 uppercase text-[10px] font-bold">
+                                    <th class="py-2.5 px-3">Plan</th>
+                                    <th class="py-2.5 px-3 text-center">Changes</th>
+                                    <th class="py-2.5 px-3 text-center">Conflicts</th>
+                                    <th class="py-2.5 px-3 text-center">Score</th>
+                                    <th class="py-2.5 px-3 text-right">Recommendation</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100 font-mono text-slate-700">
-                                <tr th:each="t : ${scenarioResult.timelineEntries}">
-                                    <td class="p-2 font-bold text-slate-500" th:text="${t.time}">12:30:00</td>
-                                    <td class="p-2 font-bold text-blue-900" th:text="${t.stage}">Scenario Created</td>
-                                    <td class="p-2 text-slate-600" th:text="${t.detail}">Details...</td>
+                            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                                <tr class="bg-emerald-50/50">
+                                    <td class="py-3 px-3 font-bold text-slate-900">Plan A</td>
+                                    <td class="py-3 px-3 text-center">3</td>
+                                    <td class="py-3 px-3 text-center">0</td>
+                                    <td class="py-3 px-3 text-center font-bold text-emerald-700">93</td>
+                                    <td class="py-3 px-3 text-right">
+                                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-full">Recommended</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-3 font-bold text-slate-900">Plan B</td>
+                                    <td class="py-3 px-3 text-center">4</td>
+                                    <td class="py-3 px-3 text-center">0</td>
+                                    <td class="py-3 px-3 text-center font-bold text-slate-700">87</td>
+                                    <td class="py-3 px-3 text-right">--</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-3 font-bold text-slate-900">Plan C</td>
+                                    <td class="py-3 px-3 text-center">5</td>
+                                    <td class="py-3 px-3 text-center">0</td>
+                                    <td class="py-3 px-3 text-center font-bold text-slate-700">81</td>
+                                    <td class="py-3 px-3 text-right">--</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- ACTION BAR: APPLY VS DISCARD -->
-                <div class="card p-6 bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div>
-                        <h4 class="font-bold text-base text-white">Apply Scenario to Live Care Plan?</h4>
-                        <p class="text-xs text-slate-300">Applying will commit changes to persistent SQLite (`zoo.db`), update live task schedules, and broadcast real-time terminal events.</p>
+                <!-- Right Column: Best Plan Details Card -->
+                <div class="card p-6 space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                            <i class="fa-solid fa-star text-amber-500 text-base"></i>
+                            <h4 class="font-bold text-sm text-slate-900">Best Plan: Plan A</h4>
+                        </div>
+
+                        <ul class="space-y-2 text-xs text-slate-700 font-medium">
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-green-600 font-bold"></i>
+                                <span>Reassign 3 tasks to other keepers</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-green-600 font-bold"></i>
+                                <span>No time conflicts</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-green-600 font-bold"></i>
+                                <span>Minimum disruption</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-green-600 font-bold"></i>
+                                <span>Highest utility score</span>
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="flex items-center gap-3">
-                        <form th:action="@{/scenario-planner/discard}" method="post">
-                            <button type="submit" class="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-lg transition">
-                                Discard Scenario
-                            </button>
-                        </form>
-
-                        <form th:action="@{/scenario-planner/apply}" method="post">
-                            <button type="submit" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm rounded-lg shadow-lg flex items-center gap-2 transition">
-                                <i class="fa-solid fa-check"></i>
-                                <span>Apply Scenario to Live Plan</span>
-                            </button>
-                        </form>
+                    <div class="flex items-center gap-2 pt-4 border-t border-slate-100">
+                        <button class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl border border-slate-300">
+                            View Details
+                        </button>
+                        <button class="w-1/2 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow">
+                            Apply Scenario
+                        </button>
                     </div>
                 </div>
 
@@ -412,6 +167,5 @@
 
         </div>
     </main>
-
 </body>
 </html>

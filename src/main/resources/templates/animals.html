@@ -12,7 +12,7 @@
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 4px; }
         .nav-item:hover { background-color: #1e293b; color: #ffffff; }
         .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
@@ -23,44 +23,54 @@
         <div th:replace="~{layout/main :: header}"></div>
 
         <div class="p-8 space-y-6">
-            <!-- Page Title & Tabs -->
-            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+            <!-- Page Title & Navigation Tabs -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4 flex-wrap gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-blue-950">Animals & AI Knowledge Base</h1>
-                    <p class="text-sm text-slate-500">Manage Animal Profiles & Species Taxonomical Rules</p>
+                    <h1 class="text-2xl font-bold text-blue-950 flex items-center gap-2">
+                        <i class="fa-solid fa-paw text-blue-600"></i> Animals & AI Knowledge Base
+                    </h1>
+                    <p class="text-sm text-slate-500">Manage Animal Profiles, Registrations & Taxonomical Knowledge</p>
                 </div>
                 <!-- Tab Navigation Buttons -->
-                <div class="flex items-center gap-2 bg-slate-200 p-1 rounded-lg">
-                    <a th:href="@{/animals(tab=1)}"
-                       th:class="${activeTab == '1'} ? 'px-4 py-2 text-sm font-semibold bg-white text-blue-700 rounded-md shadow-sm' : 'px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-700'">
-                        🐘 TAB 1: ANIMALS
+                <div class="flex items-center gap-2 bg-slate-200/80 p-1.5 rounded-xl border border-slate-300/60">
+                    <a th:href="@{/animals(tab='1')}"
+                       th:class="${activeTab == '1'} ? 'px-4 py-2 text-xs font-bold bg-white text-blue-900 rounded-lg shadow-sm flex items-center gap-2' : 'px-4 py-2 text-xs font-semibold text-slate-600 hover:text-blue-900 flex items-center gap-2'">
+                        <i class="fa-solid fa-list"></i> View Animals
                     </a>
-                    <a th:href="@{/animals(tab=2)}"
-                       th:class="${activeTab == '2'} ? 'px-4 py-2 text-sm font-semibold bg-white text-blue-700 rounded-md shadow-sm' : 'px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-700'">
-                        🧠 TAB 2: AI KNOWLEDGE BASE & DIET QUERY
+                    <a th:href="@{/animals(tab='add')}"
+                       th:class="${activeTab == 'add'} ? 'px-4 py-2 text-xs font-bold bg-white text-blue-900 rounded-lg shadow-sm flex items-center gap-2' : 'px-4 py-2 text-xs font-semibold text-slate-600 hover:text-blue-900 flex items-center gap-2'">
+                        <i class="fa-solid fa-plus-circle text-blue-600"></i> Add New Animal
+                    </a>
+                    <a th:href="@{/animals(tab='2')}"
+                       th:class="${activeTab == '2'} ? 'px-4 py-2 text-xs font-bold bg-white text-blue-900 rounded-lg shadow-sm flex items-center gap-2' : 'px-4 py-2 text-xs font-semibold text-slate-600 hover:text-blue-900 flex items-center gap-2'">
+                        <i class="fa-solid fa-brain text-purple-600"></i> AI Knowledge & Query
                     </a>
                 </div>
             </div>
 
-            <!-- TAB 1 — ANIMALS CONTENT -->
+            <!-- ========================================================= -->
+            <!-- TAB 1 — VIEW ANIMALS GRID -->
+            <!-- ========================================================= -->
             <div th:if="${activeTab == '1'}" class="space-y-6">
-
                 <!-- Action Bar -->
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-800">Zoo Resident Animals (<span th:text="${animals != null ? animals.size() : 0}">0</span>)</h3>
-                    <button onclick="document.getElementById('addAnimalModal').classList.remove('hidden')"
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg shadow flex items-center gap-2">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <span>Zoo Resident Animals</span>
+                        <span class="px-2.5 py-0.5 bg-blue-100 text-blue-800 text-xs font-bold rounded-full" th:text="${animals != null ? animals.size() : 0}">0</span>
+                    </h3>
+                    <a th:href="@{/animals(tab='add')}"
+                       class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow flex items-center gap-2 transition">
                         <i class="fa-solid fa-plus"></i>
                         <span>Add New Animal</span>
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Animals Cards Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div th:each="a : ${animals}" class="card overflow-hidden hover:shadow-md transition">
-                        <div class="h-44 bg-slate-100 relative flex items-center justify-center border-b border-slate-100">
-                            <img th:src="@{${a.imagePath}}" th:alt="${a.name}" class="h-full w-full object-contain p-2">
-                            <span th:class="${a.status == 'Needs Attention' ? 'absolute top-3 right-3 px-2.5 py-1 bg-red-100 text-red-700 font-bold text-xs rounded-full border border-red-200' : (a.status == 'Monitoring' ? 'absolute top-3 right-3 px-2.5 py-1 bg-amber-100 text-amber-700 font-bold text-xs rounded-full border border-amber-200' : 'absolute top-3 right-3 px-2.5 py-1 bg-green-100 text-green-700 font-bold text-xs rounded-full border border-green-200')}"
+                    <div th:each="a : ${animals}" class="card overflow-hidden hover:shadow-lg transition-all duration-200">
+                        <div class="h-48 bg-slate-100/80 relative flex items-center justify-center border-b border-slate-200/60 p-4">
+                            <img th:src="@{${a.imagePath}}" th:alt="${a.name}" class="h-full w-full object-contain">
+                            <span th:class="${a.status == 'Needs Attention' ? 'absolute top-3 right-3 px-3 py-1 bg-red-100 text-red-700 font-bold text-xs rounded-full border border-red-200 shadow-sm' : (a.status == 'Monitoring' ? 'absolute top-3 right-3 px-3 py-1 bg-amber-100 text-amber-700 font-bold text-xs rounded-full border border-amber-200 shadow-sm' : 'absolute top-3 right-3 px-3 py-1 bg-green-100 text-green-700 font-bold text-xs rounded-full border border-green-200 shadow-sm')}"
                                   th:text="${a.status}">Healthy</span>
                         </div>
 
@@ -68,117 +78,415 @@
                             <div class="flex items-center justify-between">
                                 <div>
                                     <h4 class="font-bold text-lg text-slate-900" th:text="${a.name}">Aruna</h4>
-                                    <p class="text-xs text-blue-600 font-semibold" th:text="${a.species + ' (' + a.animalId + ')'}">Elephant (E101)</p>
+                                    <p class="text-xs text-blue-600 font-bold" th:text="${a.species + ' (' + a.animalId + ')'}">Elephant (E101)</p>
                                 </div>
-                                <span class="text-xs font-mono px-2 py-1 bg-slate-100 rounded text-slate-600" th:text="${'Age ' + a.age}">Age 12</span>
+                                <span class="text-xs font-mono px-2.5 py-1 bg-slate-100 font-bold rounded-lg text-slate-700 border border-slate-200" th:text="${'Age ' + a.age}">Age 12</span>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg">
-                                <div><span class="font-semibold text-slate-500">Gender:</span> <span th:text="${a.gender}">Female</span></div>
-                                <div><span class="font-semibold text-slate-500">Preference:</span> <span class="text-blue-700 font-bold" th:text="${a.foodPreference}">Banana</span></div>
+                            <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <div><span class="font-semibold text-slate-400">Gender:</span> <span class="font-semibold text-slate-800" th:text="${a.gender}">Female</span></div>
+                                <div><span class="font-semibold text-slate-400">Preference:</span> <span class="text-blue-700 font-bold" th:text="${a.foodPreference}">Banana</span></div>
                             </div>
 
                             <p class="text-xs text-slate-500 italic line-clamp-2" th:text="${a.notes}">Notes info...</p>
 
-                            <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                                <a th:href="@{'/animals/delete/' + ${a.id}}" onclick="return confirm('Delete this animal?');" class="text-xs text-red-600 hover:underline">
-                                    <i class="fa-solid fa-trash mr-1"></i>Delete
+                            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <a th:href="@{'/animals/delete/' + ${a.id}}" onclick="return confirm('Delete this animal profile?');" class="text-xs text-red-600 hover:text-red-800 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> Delete Profile
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- ADD ANIMAL MODAL -->
-                <div id="addAnimalModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-                    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
-                        <div class="flex items-center justify-between border-b pb-3">
-                            <h3 class="text-lg font-bold text-blue-900">Add New Animal Profile</h3>
-                            <button onclick="document.getElementById('addAnimalModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            <!-- ========================================================= -->
+            <!-- TAB 'add' — ADD NEW ANIMAL (DEDICATED PAGE LAYOUT) -->
+            <!-- ========================================================= -->
+            <div th:if="${activeTab == 'add'}" class="space-y-6">
+
+                <!-- TOP HEADER BANNER CARD -->
+                <div class="p-6 bg-gradient-to-r from-blue-900 via-slate-900 to-blue-950 text-white rounded-2xl shadow-xl border border-blue-800/80 flex items-center justify-between relative overflow-hidden">
+                    <div class="space-y-2 max-w-2xl relative z-10">
+                        <div class="flex items-center gap-3">
+                            <span class="p-3 bg-blue-600/40 text-blue-300 rounded-xl text-2xl border border-blue-400/30">
+                                <i class="fa-solid fa-paw"></i>
+                            </span>
+                            <div>
+                                <h2 class="text-2xl font-black text-white tracking-wide">Add New Animal</h2>
+                                <p class="text-xs text-blue-200 font-medium">Register a new animal to the zoo system. This will be added to the AI knowledge base and available for scheduling and care planning.</p>
+                            </div>
                         </div>
+                    </div>
 
-                        <form th:action="@{/animals/add}" method="post" class="space-y-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Animal ID (e.g. E101)</label>
-                                    <input type="text" name="animalId" required placeholder="E101" class="w-full p-2 border rounded-lg text-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Animal Name</label>
-                                    <input type="text" name="name" required placeholder="Aruna" class="w-full p-2 border rounded-lg text-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Species</label>
-                                    <select name="species" required class="w-full p-2 border rounded-lg text-sm">
-                                        <option value="Elephant">Elephant</option>
-                                        <option value="Lion">Lion</option>
-                                        <option value="Giraffe">Giraffe</option>
-                                        <option value="Zebra">Zebra</option>
-                                        <option value="Tiger">Tiger</option>
-                                        <option value="Deer">Deer</option>
-                                        <option value="Monkey">Monkey</option>
-                                        <option value="Bear">Bear</option>
-                                        <option value="Penguin">Penguin</option>
-                                        <option value="Rhino">Rhino</option>
-                                        <option value="Hippo">Hippo</option>
-                                        <option value="Parrot">Parrot</option>
-                                        <option value="Crocodile">Crocodile</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Age (Required)</label>
-                                    <input type="number" name="age" required min="0" max="100" placeholder="12" class="w-full p-2 border rounded-lg text-sm">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Gender</label>
-                                    <select name="gender" class="w-full p-2 border rounded-lg text-sm">
-                                        <option value="Female">Female</option>
-                                        <option value="Male">Male</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Food Preference</label>
-                                    <input type="text" name="foodPreference" placeholder="Banana" class="w-full p-2 border rounded-lg text-sm">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Notes</label>
-                                <textarea name="notes" rows="2" placeholder="Behavior notes..." class="w-full p-2 border rounded-lg text-sm"></textarea>
-                            </div>
-
-                            <!-- DEFAULT LOCAL ANIMAL IMAGE SELECTION CARDS -->
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-2">Select Predefined Animal Image</label>
-                                <input type="hidden" name="selectedImage" id="selectedImageInput" value="elephant.png">
-                                <div class="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto p-2 bg-slate-50 border rounded-lg">
-                                    <div th:each="img : ${predefinedImages}"
-                                         onclick="selectImage(this, '[[${img}]]')"
-                                         class="image-card cursor-pointer p-2 bg-white border border-slate-200 rounded text-center hover:border-blue-600 transition">
-                                        <img th:src="@{'/images/animals/' + ${img}}" class="w-10 h-10 mx-auto object-contain">
-                                        <span class="text-[10px] text-slate-600 block mt-1 capitalize" th:text="${img.replace('.png','')}">elephant</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-end gap-2 pt-3 border-t">
-                                <button type="button" onclick="document.getElementById('addAnimalModal').classList.add('hidden')" class="px-4 py-2 bg-slate-200 text-slate-700 text-sm font-medium rounded-lg">Cancel</button>
-                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">Save Animal to SQLite</button>
-                            </div>
-                        </form>
+                    <!-- Right Decorative Banner Artwork -->
+                    <div class="hidden md:flex items-center gap-3 px-4 py-2 bg-blue-950/70 border border-blue-500/40 rounded-xl text-amber-300 font-bold text-xs tracking-wider shadow-inner">
+                        <span>EVERY ANIMAL MATTERS ♡</span>
                     </div>
                 </div>
 
-                <script>
-                    function selectImage(el, imgName) {
-                        document.querySelectorAll('.image-card').forEach(c => c.classList.remove('border-blue-600', 'bg-blue-50'));
-                        el.classList.add('border-blue-600', 'bg-blue-50');
-                        document.getElementById('selectedImageInput').value = imgName;
-                    }
-                </script>
+                <!-- MAIN FORM & SIDE PANEL GRID -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                    <!-- LEFT COLUMN (FORM - 2 COLUMNS WIDE) -->
+                    <div class="lg:col-span-2 space-y-6">
+
+                        <!-- SECTION 1: SELECT ANIMAL IMAGE -->
+                        <div class="card p-6 space-y-4">
+                            <div class="border-b border-slate-100 pb-3">
+                                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-image text-blue-600"></i>
+                                    <span>1. Select Animal Image</span>
+                                </h3>
+                                <p class="text-xs text-slate-500">Choose a photo for the animal (you can also select from species profiles).</p>
+                            </div>
+
+                            <!-- 20-SPECIES IMAGE SELECTION CARDS GRID -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-96 overflow-y-auto p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
+                                <div onclick="selectAnimalImage(this, 'Lion', 'lion.png')" data-species="Lion" class="animal-card-item cursor-pointer p-3.5 bg-blue-50 border-2 border-blue-600 rounded-xl text-center shadow-sm relative transition-all group">
+                                    <span class="check-badge absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/lion.png" alt="Lion" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Lion</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Tiger', 'tiger.png')" data-species="Tiger" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/tiger.png" alt="Tiger" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Tiger</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Elephant', 'elephant.png')" data-species="Elephant" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/elephant.png" alt="Elephant" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Elephant</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Giraffe', 'giraffe.png')" data-species="Giraffe" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/giraffe.png" alt="Giraffe" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Giraffe</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Zebra', 'zebra.png')" data-species="Zebra" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/zebra.png" alt="Zebra" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Zebra</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Leopard', 'leopard.png')" data-species="Leopard" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/leopard.png" alt="Leopard" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Leopard</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Bear', 'bear.png')" data-species="Bear" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/bear.png" alt="Bear" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Bear</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Wolf', 'wolf.png')" data-species="Wolf" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/wolf.png" alt="Wolf" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Wolf</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Gorilla', 'gorilla.png')" data-species="Gorilla" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/gorilla.png" alt="Gorilla" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Gorilla</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Rhinoceros', 'rhino.png')" data-species="Rhinoceros" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/rhino.png" alt="Rhinoceros" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Rhinoceros</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Hippopotamus', 'hippo.png')" data-species="Hippopotamus" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/hippo.png" alt="Hippopotamus" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Hippopotamus</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Penguin', 'penguin.png')" data-species="Penguin" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/penguin.png" alt="Penguin" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Penguin</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Flamingo', 'flamingo.png')" data-species="Flamingo" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/flamingo.png" alt="Flamingo" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Flamingo</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Crocodile', 'crocodile.png')" data-species="Crocodile" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/crocodile.png" alt="Crocodile" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Crocodile</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Ostrich', 'ostrich.png')" data-species="Ostrich" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/ostrich.png" alt="Ostrich" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Ostrich</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Kangaroo', 'kangaroo.png')" data-species="Kangaroo" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/kangaroo.png" alt="Kangaroo" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Kangaroo</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Panda', 'panda.png')" data-species="Panda" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/panda.png" alt="Panda" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Panda</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Red Panda', 'redpanda.png')" data-species="Red Panda" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/redpanda.png" alt="Red Panda" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Red Panda</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Monkey', 'monkey.png')" data-species="Monkey" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/monkey.png" alt="Gibbon" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Gibbon</span>
+                                </div>
+
+                                <div onclick="selectAnimalImage(this, 'Otter', 'otter.png')" data-species="Otter" class="animal-card-item cursor-pointer p-3.5 bg-white border border-slate-200 rounded-xl text-center hover:border-blue-400 transition-all group">
+                                    <span class="check-badge hidden absolute top-1.5 right-1.5 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">✓</span>
+                                    <img src="/images/animals/otter.png" alt="Otter" class="w-16 h-16 mx-auto object-contain transition group-hover:scale-105">
+                                    <span class="text-xs font-bold text-slate-800 block mt-2">Otter</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 2: ANIMAL DETAILS FORM -->
+                        <div class="card p-6 space-y-6">
+                            <div class="border-b border-slate-100 pb-3">
+                                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-address-card text-blue-600"></i>
+                                    <span>2. Animal Details</span>
+                                </h3>
+                                <p class="text-xs text-slate-500">Enter essential information and dietary preferences.</p>
+                            </div>
+
+                            <form th:action="@{/animals/add}" method="post" class="space-y-6">
+                                <input type="hidden" name="selectedImage" id="selectedImageInput" value="lion.png">
+
+                                <!-- INPUTS GRID -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Animal ID <span class="text-red-500">*</span></label>
+                                        <input type="text" name="animalId" required placeholder="e.g. L101" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-blue-600 focus:bg-white focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Animal Name <span class="text-red-500">*</span></label>
+                                        <input type="text" name="name" required placeholder="e.g. Leo" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-blue-600 focus:bg-white focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Species <span class="text-red-500">*</span></label>
+                                        <select id="speciesSelect" name="species" required onchange="onSpeciesSelectChange(this.value)" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-blue-600 focus:bg-white focus:outline-none">
+                                            <option value="Lion">Lion</option>
+                                            <option value="Tiger">Tiger</option>
+                                            <option value="Elephant">Elephant</option>
+                                            <option value="Giraffe">Giraffe</option>
+                                            <option value="Zebra">Zebra</option>
+                                            <option value="Leopard">Leopard</option>
+                                            <option value="Bear">Bear</option>
+                                            <option value="Wolf">Wolf</option>
+                                            <option value="Gorilla">Gorilla</option>
+                                            <option value="Rhinoceros">Rhinoceros</option>
+                                            <option value="Hippopotamus">Hippopotamus</option>
+                                            <option value="Penguin">Penguin</option>
+                                            <option value="Flamingo">Flamingo</option>
+                                            <option value="Crocodile">Crocodile</option>
+                                            <option value="Ostrich">Ostrich</option>
+                                            <option value="Kangaroo">Kangaroo</option>
+                                            <option value="Panda">Panda</option>
+                                            <option value="Red Panda">Red Panda</option>
+                                            <option value="Monkey">Gibbon / Monkey</option>
+                                            <option value="Otter">Otter</option>
+                                            <option value="Deer">Deer</option>
+                                            <option value="Parrot">Parrot</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Age (Years) <span class="text-red-500">*</span></label>
+                                        <input type="number" name="age" required min="0" max="100" placeholder="e.g. 5" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-blue-600 focus:bg-white focus:outline-none">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Gender <span class="text-red-500">*</span></label>
+                                        <select name="gender" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-blue-600 focus:bg-white focus:outline-none">
+                                            <option value="Female">Female</option>
+                                            <option value="Male">Male</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- FOOD PREFERENCES CHECKBOX PILLS -->
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-slate-700">Food Preferences</label>
+                                    <p class="text-[11px] text-slate-500">Select the foods this animal prefers (from available food list).</p>
+
+                                    <div class="flex flex-wrap gap-2 pt-1">
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Grass" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Grass</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Hay" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Hay</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Banana" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Banana</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Apple" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Apple</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Carrot" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Carrot</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Meat" checked class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Meat</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Fish" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Fish</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Pellets" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Pellets</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Leaves" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Leaves</span>
+                                        </label>
+                                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                                            <input type="checkbox" name="foodPreferencesList" value="Other" class="rounded text-blue-600 focus:ring-blue-500">
+                                            <span>Other</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- ADDITIONAL NOTES TEXTAREA -->
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <label class="block text-xs font-semibold text-slate-700">Additional Notes</label>
+                                        <span id="charCount" class="text-xs text-slate-400 font-mono">0/500</span>
+                                    </div>
+                                    <textarea name="notes" rows="3" maxlength="500" oninput="document.getElementById('charCount').innerText = this.value.length + '/500'" placeholder="Add any special notes, medical history, or care instructions..." class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:border-blue-600 focus:bg-white focus:outline-none"></textarea>
+                                </div>
+
+                                <!-- ACTION BUTTONS -->
+                                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                                    <a th:href="@{/animals(tab='1')}" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl border border-slate-300 transition">
+                                        ✕ Cancel
+                                    </a>
+                                    <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center gap-2">
+                                        <i class="fa-solid fa-plus"></i>
+                                        <span>+ Add Animal</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN (PREVIEW & INFO PANEL) -->
+                    <div class="space-y-6">
+
+                        <!-- SELECTED ANIMAL PREVIEW CARD -->
+                        <div class="card p-6 space-y-4">
+                            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 border-b pb-3">
+                                <i class="fa-solid fa-eye text-blue-600"></i>
+                                <span>Selected Animal Preview</span>
+                            </h3>
+
+                            <div class="h-48 bg-slate-100 rounded-xl flex items-center justify-center p-3 border border-slate-200">
+                                <img id="previewImg" src="/images/animals/lion.png" alt="Preview" class="h-full w-full object-contain">
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <h4 id="previewSpeciesTitle" class="font-bold text-xl text-slate-900">Lion</h4>
+                                <span id="previewClassBadge" class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full border border-blue-200">Mammal</span>
+                            </div>
+
+                            <div class="space-y-2.5 pt-2 text-xs border-t border-slate-100">
+                                <h5 class="font-bold text-slate-400 uppercase tracking-wider text-[10px]">Quick Info</h5>
+                                <div class="flex justify-between py-1 border-b border-slate-50">
+                                    <span class="text-slate-500 font-medium">⏰ Average Lifespan:</span>
+                                    <span id="previewLifespan" class="font-bold text-slate-800">12 - 16 years</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-50">
+                                    <span class="text-slate-500 font-medium">⚖️ Typical Weight:</span>
+                                    <span id="previewWeight" class="font-bold text-slate-800">150 - 250 kg</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-50">
+                                    <span class="text-slate-500 font-medium">🥩 Diet:</span>
+                                    <span id="previewDiet" class="font-bold text-slate-800">Carnivore</span>
+                                </div>
+                                <div class="flex justify-between py-1">
+                                    <span class="text-slate-500 font-medium">🏞️ Habitat:</span>
+                                    <span id="previewHabitat" class="font-bold text-slate-800 text-right">Grasslands / Savanna</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WHY ADD THIS ANIMAL? CARD -->
+                        <div class="card p-6 space-y-3 bg-blue-50/40 border border-blue-200/60">
+                            <h4 class="font-bold text-sm text-blue-950 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-green-600"></i>
+                                <span>Why Add This Animal?</span>
+                            </h4>
+                            <ul class="space-y-2 text-xs text-slate-700">
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600 font-bold">✓</span>
+                                    <span>Available for AI scheduling and care planning</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600 font-bold">✓</span>
+                                    <span>Will appear in daily zoo operations</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600 font-bold">✓</span>
+                                    <span>Helps improve animal health tracking</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600 font-bold">✓</span>
+                                    <span>Contributes to AI knowledge base</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- BOTTOM PROMO CARD -->
+                        <div class="card p-5 bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-2xl space-y-2 shadow-md">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">🦁</span>
+                                <div>
+                                    <h5 class="font-bold text-sm text-blue-200">Smarter Operations</h5>
+                                    <p class="text-xs text-slate-300">More Data = Better Decisions = Healthier Animals 🌿</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <!-- TAB 2 — AI KNOWLEDGE BASE & DIETARY QUERY CONTENT -->
+            <!-- ========================================================= -->
+            <!-- TAB 2 — AI KNOWLEDGE BASE & DIET QUERY CONTENT -->
+            <!-- ========================================================= -->
             <div th:if="${activeTab == '2'}" class="space-y-6">
 
                 <!-- AI Query Banner & Form -->
@@ -351,15 +659,123 @@
                     </div>
                 </div>
 
-                <script>
-                    function setPreset(name, species, age) {
-                        document.getElementById('queryNameInput').value = name;
-                        document.getElementById('querySpeciesSelect').value = species;
-                        document.getElementById('queryAgeInput').value = age;
-                    }
-                </script>
             </div>
         </div>
     </main>
+
+    <!-- REAL-TIME JS FOR PREVIEW & SELECTION -->
+    <script>
+        const speciesMetadata = {
+            'Lion': { class: 'Mammal', lifespan: '12 - 16 years', weight: '150 - 250 kg', diet: 'Carnivore', habitat: 'Grasslands / Savanna', image: 'lion.png' },
+            'Tiger': { class: 'Mammal', lifespan: '10 - 15 years', weight: '100 - 300 kg', diet: 'Carnivore', habitat: 'Dense Forests & Mangroves', image: 'tiger.png' },
+            'Elephant': { class: 'Mammal', lifespan: '60 - 70 years', weight: '4,000 - 6,000 kg', diet: 'Herbivore', habitat: 'Savannas & Tropical Forests', image: 'elephant.png' },
+            'Giraffe': { class: 'Mammal', lifespan: '20 - 25 years', weight: '800 - 1,200 kg', diet: 'Herbivore', habitat: 'Woodlands & Savannas', image: 'giraffe.png' },
+            'Zebra': { class: 'Mammal', lifespan: '20 - 30 years', weight: '300 - 450 kg', diet: 'Herbivore', habitat: 'Tree-dotted Grasslands', image: 'zebra.png' },
+            'Leopard': { class: 'Mammal', lifespan: '12 - 17 years', weight: '30 - 90 kg', diet: 'Carnivore', habitat: 'Rainforests & Mountains', image: 'leopard.png' },
+            'Bear': { class: 'Mammal', lifespan: '20 - 30 years', weight: '150 - 450 kg', diet: 'Omnivore', habitat: 'Forests & Tundra', image: 'bear.png' },
+            'Wolf': { class: 'Mammal', lifespan: '6 - 8 years', weight: '30 - 80 kg', diet: 'Carnivore', habitat: 'Forests & Tundra', image: 'wolf.png' },
+            'Gorilla': { class: 'Mammal', lifespan: '35 - 40 years', weight: '130 - 200 kg', diet: 'Herbivore', habitat: 'Tropical Forests', image: 'gorilla.png' },
+            'Rhinoceros': { class: 'Mammal', lifespan: '35 - 50 years', weight: '1,800 - 2,700 kg', diet: 'Herbivore', habitat: 'Savannas & Floodplains', image: 'rhino.png' },
+            'Hippopotamus': { class: 'Mammal', lifespan: '40 - 50 years', weight: '1,300 - 1,800 kg', diet: 'Herbivore', habitat: 'Rivers & Swamps', image: 'hippo.png' },
+            'Penguin': { class: 'Bird', lifespan: '15 - 20 years', weight: '1 - 35 kg', diet: 'Piscivore', habitat: 'Coastal Islands', image: 'penguin.png' },
+            'Flamingo': { class: 'Bird', lifespan: '20 - 30 years', weight: '2 - 4 kg', diet: 'Filter Feeder', habitat: 'Saline Lagoons & Mudflats', image: 'flamingo.png' },
+            'Crocodile': { class: 'Reptile', lifespan: '70 - 100 years', weight: '400 - 1,000 kg', diet: 'Carnivore', habitat: 'Rivers & Tropical Wetlands', image: 'crocodile.png' },
+            'Ostrich': { class: 'Bird', lifespan: '40 - 45 years', weight: '90 - 130 kg', diet: 'Omnivore', habitat: 'Savannas & Arid Plains', image: 'ostrich.png' },
+            'Kangaroo': { class: 'Mammal', lifespan: '8 - 12 years', weight: '50 - 90 kg', diet: 'Herbivore', habitat: 'Open Plains & Forests', image: 'kangaroo.png' },
+            'Panda': { class: 'Mammal', lifespan: '20 - 30 years', weight: '70 - 125 kg', diet: 'Herbivore (Bamboo)', habitat: 'Bamboo Forests', image: 'panda.png' },
+            'Red Panda': { class: 'Mammal', lifespan: '8 - 10 years', weight: '3 - 6 kg', diet: 'Omnivore / Bamboo', habitat: 'High-altitude Forests', image: 'redpanda.png' },
+            'Monkey': { class: 'Mammal', lifespan: '25 - 30 years', weight: '5 - 12 kg', diet: 'Frugivore / Omnivore', habitat: 'Rainforest Canopy', image: 'monkey.png' },
+            'Otter': { class: 'Mammal', lifespan: '10 - 15 years', weight: '5 - 14 kg', diet: 'Piscivore', habitat: 'Rivers & Coasts', image: 'otter.png' },
+            'Deer': { class: 'Mammal', lifespan: '10 - 15 years', weight: '40 - 100 kg', diet: 'Herbivore', habitat: 'Forests & Meadows', image: 'deer.png' },
+            'Parrot': { class: 'Bird', lifespan: '30 - 50 years', weight: '0.5 - 1.5 kg', diet: 'Frugivore / Granivore', habitat: 'Tropical Rainforests', image: 'parrot.png' }
+        };
+
+        function selectAnimalImage(element, speciesName, imageName) {
+            document.querySelectorAll('.animal-card-item').forEach(card => {
+                card.classList.remove('border-2', 'border-blue-600', 'bg-blue-50', 'shadow-sm');
+                card.classList.add('border', 'border-slate-200', 'bg-white');
+                const badge = card.querySelector('.check-badge');
+                if (badge) badge.classList.add('hidden');
+            });
+
+            element.classList.remove('border', 'border-slate-200', 'bg-white');
+            element.classList.add('border-2', 'border-blue-600', 'bg-blue-50', 'shadow-sm');
+            const badge = element.querySelector('.check-badge');
+            if (badge) badge.classList.remove('hidden');
+
+            document.getElementById('selectedImageInput').value = imageName;
+            
+            const select = document.getElementById('speciesSelect');
+            if (select) {
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value.toLowerCase() === speciesName.toLowerCase()) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            updatePreviewPanel(speciesName, imageName);
+        }
+
+        function onSpeciesSelectChange(speciesName) {
+            const info = speciesMetadata[speciesName] || {};
+            const imageName = info.image || (speciesName.toLowerCase() + '.png');
+            
+            document.querySelectorAll('.animal-card-item').forEach(card => {
+                const nameAttr = card.getAttribute('data-species');
+                if (nameAttr && nameAttr.toLowerCase() === speciesName.toLowerCase()) {
+                    card.classList.remove('border', 'border-slate-200', 'bg-white');
+                    card.classList.add('border-2', 'border-blue-600', 'bg-blue-50', 'shadow-sm');
+                    const badge = card.querySelector('.check-badge');
+                    if (badge) badge.classList.remove('hidden');
+                } else {
+                    card.classList.remove('border-2', 'border-blue-600', 'bg-blue-50', 'shadow-sm');
+                    card.classList.add('border', 'border-slate-200', 'bg-white');
+                    const badge = card.querySelector('.check-badge');
+                    if (badge) badge.classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('selectedImageInput').value = imageName;
+            updatePreviewPanel(speciesName, imageName);
+        }
+
+        function updatePreviewPanel(speciesName, imageName) {
+            const info = speciesMetadata[speciesName] || {
+                class: 'Mammal', lifespan: '15 - 25 years', weight: '100 - 500 kg', diet: 'Omnivore', habitat: 'Zoo Habitat'
+            };
+
+            const previewImg = document.getElementById('previewImg');
+            if (previewImg) previewImg.src = '/images/animals/' + imageName;
+
+            const previewTitle = document.getElementById('previewSpeciesTitle');
+            if (previewTitle) previewTitle.innerText = speciesName;
+
+            const previewBadge = document.getElementById('previewClassBadge');
+            if (previewBadge) previewBadge.innerText = info.class;
+
+            const previewLifespan = document.getElementById('previewLifespan');
+            if (previewLifespan) previewLifespan.innerText = info.lifespan;
+
+            const previewWeight = document.getElementById('previewWeight');
+            if (previewWeight) previewWeight.innerText = info.weight;
+
+            const previewDiet = document.getElementById('previewDiet');
+            if (previewDiet) previewDiet.innerText = info.diet;
+
+            const previewHabitat = document.getElementById('previewHabitat');
+            if (previewHabitat) previewHabitat.innerText = info.habitat;
+        }
+
+        function setPreset(name, species, age) {
+            const nameInput = document.getElementById('queryNameInput');
+            if (nameInput) nameInput.value = name;
+            const speciesSelect = document.getElementById('querySpeciesSelect');
+            if (speciesSelect) speciesSelect.value = species;
+            const ageInput = document.getElementById('queryAgeInput');
+            if (ageInput) ageInput.value = age;
+        }
+    </script>
 </body>
 </html>
