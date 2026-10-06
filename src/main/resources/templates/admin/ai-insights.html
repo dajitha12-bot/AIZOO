@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insights & Recommendations — AI Zoo Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .sidebar { width: 280px; background-color: #020617; border-right: 1px solid #1e293b; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
+        .nav-item:hover { background-color: #1e293b; color: #ffffff; }
+        .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <div th:replace="~{layout/main :: admin_sidebar}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <div th:replace="~{layout/main :: header}"></div>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Page Title Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-blue-600"></i> AI Insights & Recommendations
+                    </h1>
+                    <p class="text-xs text-slate-500">Get intelligent suggestions to improve zoo operations.</p>
+                </div>
+            </div>
+
+            <!-- AI Recommendations List -->
+            <div class="card p-6 space-y-4">
+                <h3 class="font-bold text-sm text-slate-900 border-b pb-2">AI Recommendations</h3>
+
+                <div class="space-y-3">
+                    <div class="p-3.5 bg-slate-50 border rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2 bg-blue-100 text-blue-700 rounded-lg text-sm"><i class="fa-solid fa-lightbulb"></i></span>
+                            <span class="text-xs font-semibold text-slate-800">Consider adding another cleaning kit (High usage detected in Zone A & B)</span>
+                        </div>
+                        <button class="px-3 py-1 bg-white border text-slate-700 font-semibold text-xs rounded-lg hover:border-blue-500">View</button>
+                    </div>
+
+                    <div class="p-3.5 bg-slate-50 border rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2 bg-amber-100 text-amber-700 rounded-lg text-sm"><i class="fa-solid fa-clock"></i></span>
+                            <span class="text-xs font-semibold text-slate-800">Move feeding time for Giraffe (Conflicts with enrichment activity)</span>
+                        </div>
+                        <button class="px-3 py-1 bg-white border text-slate-700 font-semibold text-xs rounded-lg hover:border-blue-500">View</button>
+                    </div>
+
+                    <div class="p-3.5 bg-slate-50 border rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2 bg-red-100 text-red-700 rounded-lg text-sm"><i class="fa-solid fa-apple-whole"></i></span>
+                            <span class="text-xs font-semibold text-slate-800">Increase banana stock (Only 10 kg left)</span>
+                        </div>
+                        <button class="px-3 py-1 bg-white border text-slate-700 font-semibold text-xs rounded-lg hover:border-blue-500">View</button>
+                    </div>
+
+                    <div class="p-3.5 bg-slate-50 border rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="p-2 bg-emerald-100 text-emerald-700 rounded-lg text-sm"><i class="fa-solid fa-person-walking"></i></span>
+                            <span class="text-xs font-semibold text-slate-800">Optimize keeper allocation (Can reduce travel time by 15%)</span>
+                        </div>
+                        <button class="px-3 py-1 bg-white border text-slate-700 font-semibold text-xs rounded-lg hover:border-blue-500">View</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Predictive Analysis + AI Performance + Giraffe Banner -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Predictive Analysis Card -->
+                <div class="card p-6 space-y-4">
+                    <h3 class="font-bold text-sm text-slate-900 border-b pb-2">Predictive Analysis</h3>
+                    <p class="text-xs font-bold text-slate-800">Potential Conflicts Tomorrow</p>
+                    <p class="text-xs text-slate-600">3 potential conflicts detected:</p>
+
+                    <ul class="space-y-2 text-xs text-slate-700 font-medium">
+                        <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Keeper overload (10:00 - 12:00)</li>
+                        <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-500"></span> Resource shortage (Cleaning Kit)</li>
+                        <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Location conflict (Zone B)</li>
+                    </ul>
+
+                    <button class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition">
+                        View Schedule
+                    </button>
+                </div>
+
+                <!-- AI Performance Card -->
+                <div class="card p-6 space-y-4">
+                    <h3 class="font-bold text-sm text-slate-900 border-b pb-2">AI Performance</h3>
+
+                    <div class="relative w-32 h-32 mx-auto flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-slate-100" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            <path class="text-emerald-500 stroke-current" stroke-width="4" stroke-dasharray="92, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        </svg>
+                        <span class="absolute text-xl font-black text-slate-900">92%</span>
+                    </div>
+
+                    <div class="space-y-1.5 text-xs font-medium text-slate-700">
+                        <div class="flex justify-between"><span>Total Re-plans:</span> <strong>12</strong></div>
+                        <div class="flex justify-between"><span>Avg. Resolution Time:</span> <strong>4 min</strong></div>
+                        <div class="flex justify-between"><span>User Satisfaction:</span> <strong class="text-amber-600">4.8 / 5 ⭐</strong></div>
+                    </div>
+                </div>
+
+                <!-- Giraffe Promo Banner Card -->
+                <div class="card p-6 bg-gradient-to-r from-blue-900 via-slate-900 to-blue-950 text-white rounded-2xl flex items-center justify-between shadow-lg relative overflow-hidden">
+                    <div class="space-y-2 max-w-xs relative z-10">
+                        <h3 class="text-xl font-black text-white leading-tight">Smarter Planning = Healthier Animals = A Better Zoo 🌿</h3>
+                    </div>
+                    <img src="/images/animals/giraffe.png" alt="Giraffe" class="w-28 h-28 object-contain opacity-90">
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

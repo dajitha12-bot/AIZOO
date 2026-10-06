@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics — AI Zoo Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .sidebar { width: 280px; background-color: #020617; border-right: 1px solid #1e293b; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
+        .nav-item:hover { background-color: #1e293b; color: #ffffff; }
+        .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <div th:replace="~{layout/main :: admin_sidebar}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <div th:replace="~{layout/main :: header}"></div>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Page Title Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-blue-600"></i> Reports & Analytics
+                    </h1>
+                    <p class="text-xs text-slate-500">View historical data and AI performance metrics.</p>
+                </div>
+                <div class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 shadow-xs flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-days text-blue-600"></i>
+                    <span>1 Apr 2025 – 8 Apr 2025</span>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-2 bg-slate-200/80 p-1 rounded-xl w-max">
+                <button class="px-4 py-1.5 bg-white text-blue-900 font-bold text-xs rounded-lg shadow-xs">Overview</button>
+                <button class="px-4 py-1.5 text-slate-600 font-semibold text-xs rounded-lg hover:text-blue-900">Schedule Stability</button>
+                <button class="px-4 py-1.5 text-slate-600 font-semibold text-xs rounded-lg hover:text-blue-900">Conflict Reports</button>
+                <button class="px-4 py-1.5 text-slate-600 font-semibold text-xs rounded-lg hover:text-blue-900">Resource Usage</button>
+            </div>
+
+            <!-- 4 Metric Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card p-4 space-y-1 border-l-4 border-l-emerald-500">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Tasks Completed</p>
+                    <p class="text-2xl font-black text-slate-900">94%</p>
+                </div>
+                <div class="card p-4 space-y-1 border-l-4 border-l-blue-500">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Conflicts Resolved</p>
+                    <p class="text-2xl font-black text-slate-900">89%</p>
+                </div>
+                <div class="card p-4 space-y-1 border-l-4 border-l-purple-500">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Schedule Stability</p>
+                    <p class="text-2xl font-black text-slate-900">92%</p>
+                </div>
+                <div class="card p-4 space-y-1 border-l-4 border-l-amber-500">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Avg. Reschedule</p>
+                    <p class="text-2xl font-black text-slate-900">1.4 <span class="text-xs font-normal text-slate-400">/ task</span></p>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Task Completion Trend Chart (2 Cols) -->
+                <div class="lg:col-span-2 card p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b pb-3">
+                        <h3 class="font-bold text-sm text-slate-900">Task Completion Trend</h3>
+                        <div class="flex items-center gap-4 text-xs font-semibold">
+                            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Completed</span>
+                            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Pending</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulated Visual Line Graph SVG -->
+                    <div class="h-48 flex items-end justify-between px-4 pt-4 border-b border-l border-slate-200 text-[10px] text-slate-400 font-mono">
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-28"></div><span>Apr 1</span></div>
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-32"></div><span>Apr 2</span></div>
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-24"></div><span>Apr 3</span></div>
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-36"></div><span>Apr 4</span></div>
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-30"></div><span>Apr 5</span></div>
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-40"></div><span>Apr 6</span></div>
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-34"></div><span>Apr 7</span></div>
+                        <div class="flex flex-col items-center gap-2"><div class="w-3 bg-emerald-500 rounded-t h-38"></div><span>Apr 8</span></div>
+                    </div>
+                </div>
+
+                <!-- Most Common Conflicts Donut Chart (1 Col) -->
+                <div class="card p-6 space-y-4">
+                    <h3 class="font-bold text-sm text-slate-900 border-b pb-2">Most Common Conflicts</h3>
+
+                    <div class="relative w-36 h-36 mx-auto flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-slate-100" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            <path class="text-blue-600 stroke-current" stroke-width="4" stroke-dasharray="45, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        </svg>
+                        <span class="absolute text-xl font-black text-slate-900">6 Total</span>
+                    </div>
+
+                    <div class="space-y-1.5 text-xs">
+                        <div class="flex justify-between"><span>Keeper:</span> <strong>45%</strong></div>
+                        <div class="flex justify-between"><span>Resource:</span> <strong>30%</strong></div>
+                        <div class="flex justify-between"><span>Time:</span> <strong>15%</strong></div>
+                        <div class="flex justify-between"><span>Location:</span> <strong>10%</strong></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

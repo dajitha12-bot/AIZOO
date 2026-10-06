@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ZookeeperRepository extends JpaRepository<Zookeeper, Long> {
     Optional<Zookeeper> findByName(String name);
+    Optional<Zookeeper> findByZookeeperId(String zookeeperId);
+    Optional<Zookeeper> findByNameIgnoreCase(String name);
 }

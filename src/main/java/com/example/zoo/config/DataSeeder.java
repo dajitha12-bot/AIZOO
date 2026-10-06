@@ -231,9 +231,12 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedZookeepers() {
         List<Zookeeper> keepers = Arrays.asList(
-                new Zookeeper("Zookeeper A", "08:00 AM", "04:00 PM", true),
-                new Zookeeper("Zookeeper B", "09:00 AM", "05:00 PM", true),
-                new Zookeeper("Zookeeper C", "10:00 AM", "06:00 PM", true)
+                new Zookeeper("ZK001", "Arun", "Senior Keeper", "Zone A", "09:00 - 17:00", "Available", "pass123"),
+                new Zookeeper("ZK002", "Priya", "Senior Keeper", "Zone B", "10:00 - 18:00", "Available", "pass123"),
+                new Zookeeper("ZK003", "Kumar", "Keeper", "Zone C", "08:00 - 16:00", "Available", "pass123"),
+                new Zookeeper("ZK004", "Sneha", "Keeper", "Zone D", "09:00 - 17:00", "On Leave", "pass123"),
+                new Zookeeper("ZK005", "Ravi", "Assistant", "Zone A", "08:00 - 14:00", "Available", "pass123"),
+                new Zookeeper("ZK006", "Meena", "Assistant", "Zone B", "10:00 - 16:00", "Available", "pass123")
         );
         zookeeperRepository.saveAll(keepers);
 

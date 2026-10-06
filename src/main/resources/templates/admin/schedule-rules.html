@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule & Rules — AI Zoo Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .sidebar { width: 280px; background-color: #020617; border-right: 1px solid #1e293b; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
+        .nav-item:hover { background-color: #1e293b; color: #ffffff; }
+        .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <div th:replace="~{layout/main :: admin_sidebar}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <div th:replace="~{layout/main :: header}"></div>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Page Title Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-blue-600"></i> Schedule & Rules
+                    </h1>
+                    <p class="text-xs text-slate-500">Configure scheduling rules, task durations and constraints.</p>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-2 bg-slate-200/80 p-1 rounded-xl w-max">
+                <button class="px-4 py-1.5 bg-white text-blue-900 font-bold text-xs rounded-lg shadow-xs">Task Durations</button>
+                <button class="px-4 py-1.5 text-slate-600 font-semibold text-xs rounded-lg hover:text-blue-900">Working Hours</button>
+                <button class="px-4 py-1.5 text-slate-600 font-semibold text-xs rounded-lg hover:text-blue-900">Priority Rules</button>
+                <button class="px-4 py-1.5 text-slate-600 font-semibold text-xs rounded-lg hover:text-blue-900">Constraints</button>
+            </div>
+
+            <!-- 2 Columns Grid: Task Durations vs Additional Rules -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Left Column: Task Durations Table -->
+                <div class="card p-6 space-y-4">
+                    <h3 class="font-bold text-sm text-slate-900 border-b pb-2">Task Durations</h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b text-slate-400 uppercase text-[10px]">
+                                    <th class="py-2.5 px-3">Task Type</th>
+                                    <th class="py-2.5 px-3 text-right">Duration (mins)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                                <tr><td class="py-3 px-3 font-bold">Feeding</td><td class="py-3 px-3 text-right font-mono font-bold text-blue-900">20</td></tr>
+                                <tr><td class="py-3 px-3 font-bold">Cleaning</td><td class="py-3 px-3 text-right font-mono font-bold text-blue-900">30</td></tr>
+                                <tr><td class="py-3 px-3 font-bold">Observation</td><td class="py-3 px-3 text-right font-mono font-bold text-blue-900">15</td></tr>
+                                <tr><td class="py-3 px-3 font-bold">Enrichment</td><td class="py-3 px-3 text-right font-mono font-bold text-blue-900">25</td></tr>
+                                <tr><td class="py-3 px-3 font-bold">Medical Check</td><td class="py-3 px-3 text-right font-mono font-bold text-blue-900">30</td></tr>
+                                <tr><td class="py-3 px-3 font-bold">Transport</td><td class="py-3 px-3 text-right font-mono font-bold text-blue-900">45</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right Column: Additional Rules Toggles -->
+                <div class="card p-6 space-y-4 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-sm text-slate-900 border-b pb-2">Additional Rules</h3>
+
+                        <div class="space-y-3 text-xs text-slate-700 font-medium">
+                            <label class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border cursor-pointer">
+                                <span>✓ Same keeper cannot have overlapping tasks</span>
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                            </label>
+                            <label class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border cursor-pointer">
+                                <span>✓ Same resource cannot be used simultaneously</span>
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                            </label>
+                            <label class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border cursor-pointer">
+                                <span>✓ Respect zone restrictions</span>
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                            </label>
+                            <label class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border cursor-pointer">
+                                <span>✓ Maintain task dependencies</span>
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                            </label>
+                            <label class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border cursor-pointer">
+                                <span>✓ High priority tasks cannot be delayed</span>
+                                <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition">
+                        Save Rules
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

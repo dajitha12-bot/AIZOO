@@ -6,7 +6,7 @@
 </head>
 <body>
 
-    <!-- SIDEBAR FRAGMENT (MATCHING ALL 8 PAGES EXACTLY) -->
+    <!-- ZOOKEEPER PORTAL SIDEBAR FRAGMENT -->
     <aside th:fragment="sidebar" class="sidebar flex flex-col justify-between h-full p-4 flex-shrink-0 bg-slate-900 text-white border-r border-slate-800 w-[280px]">
         <div>
             <!-- Header Logo -->
@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <!-- Navigation Links (All 8 Pages) -->
+            <!-- Navigation Links (Zookeeper Portal) -->
             <nav class="space-y-1">
                 <a th:href="@{/dashboard}" class="nav-item" th:classappend="${activePage == 'dashboard'} ? 'active' : ''">
                     <i class="fa-solid fa-house text-sm w-5"></i>
@@ -81,17 +81,103 @@
         </div>
     </aside>
 
-    <!-- HEADER FRAGMENT (MATCHING ALL 8 PAGES EXACTLY) -->
+
+    <!-- ADMIN PORTAL SIDEBAR FRAGMENT (MATCHING MASTER IMAGE 10 PAGES) -->
+    <aside th:fragment="admin_sidebar" class="sidebar flex flex-col justify-between h-full p-4 flex-shrink-0 bg-slate-950 text-white border-r border-slate-800 w-[280px]">
+        <div>
+            <!-- Header Logo -->
+            <div class="flex items-center gap-3 px-3 py-4 mb-4 border-b border-slate-800/80">
+                <span class="p-2 bg-blue-700 rounded-xl text-white text-xl flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-paw"></i>
+                </span>
+                <div>
+                    <h1 class="text-base font-bold text-white tracking-wide leading-tight">AI ZOO PLANNER</h1>
+                    <p class="text-[11px] text-blue-400 font-bold uppercase tracking-wider">Admin Portal</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links (10 Admin Pages) -->
+            <nav class="space-y-0.5">
+                <a th:href="@{/admin/dashboard}" class="nav-item" th:classappend="${activeAdminPage == 'dashboard'} ? 'active' : ''">
+                    <i class="fa-solid fa-chart-pie text-sm w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/admin/zookeepers}" class="nav-item" th:classappend="${activeAdminPage == 'zookeepers'} ? 'active' : ''">
+                    <i class="fa-solid fa-users-gear text-sm w-5"></i>
+                    <span>Zookeeper Management</span>
+                </a>
+
+                <a th:href="@{/admin/animals}" class="nav-item" th:classappend="${activeAdminPage == 'animals'} ? 'active' : ''">
+                    <i class="fa-solid fa-paw text-sm w-5"></i>
+                    <span>Animals</span>
+                </a>
+
+                <a th:href="@{/admin/knowledge-rules}" class="nav-item" th:classappend="${activeAdminPage == 'knowledge-rules'} ? 'active' : ''">
+                    <i class="fa-solid fa-book-bookmark text-sm w-5"></i>
+                    <span>Knowledge & Rules</span>
+                </a>
+
+                <a th:href="@{/admin/food-resources}" class="nav-item" th:classappend="${activeAdminPage == 'food-resources'} ? 'active' : ''">
+                    <i class="fa-solid fa-apple-whole text-sm w-5"></i>
+                    <span>Food & Resources</span>
+                </a>
+
+                <a th:href="@{/admin/schedule-rules}" class="nav-item" th:classappend="${activeAdminPage == 'schedule-rules'} ? 'active' : ''">
+                    <i class="fa-solid fa-calendar-check text-sm w-5"></i>
+                    <span>Schedule & Rules</span>
+                </a>
+
+                <a th:href="@{/admin/conflicts-monitoring}" class="nav-item" th:classappend="${activeAdminPage == 'conflicts-monitoring'} ? 'active' : ''">
+                    <i class="fa-solid fa-shield-halved text-sm w-5"></i>
+                    <span>Conflicts & Monitoring</span>
+                </a>
+
+                <a th:href="@{/admin/reports-analytics}" class="nav-item" th:classappend="${activeAdminPage == 'reports-analytics'} ? 'active' : ''">
+                    <i class="fa-solid fa-chart-line text-sm w-5"></i>
+                    <span>Reports & Analytics</span>
+                </a>
+
+                <a th:href="@{/admin/settings}" class="nav-item" th:classappend="${activeAdminPage == 'settings'} ? 'active' : ''">
+                    <i class="fa-solid fa-gear text-sm w-5"></i>
+                    <span>Settings</span>
+                </a>
+
+                <a th:href="@{/admin/ai-insights}" class="nav-item" th:classappend="${activeAdminPage == 'ai-insights'} ? 'active' : ''">
+                    <i class="fa-solid fa-lightbulb text-sm w-5"></i>
+                    <span>AI Insights</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Bottom Footer (Admin Profile) -->
+        <div class="pt-3 border-t border-slate-800/80">
+            <div class="flex items-center justify-between px-3 py-2 bg-slate-900 rounded-xl">
+                <div class="flex items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Admin" class="w-8 h-8 rounded-full object-cover border border-amber-400">
+                    <div>
+                        <p class="text-xs font-bold text-white">Admin</p>
+                        <p class="text-[10px] text-amber-300 font-semibold">Administrator</p>
+                    </div>
+                </div>
+                <a th:href="@{/logout}" class="text-slate-400 hover:text-red-400 text-xs p-1" title="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- HEADER FRAGMENT -->
     <header th:fragment="header" class="bg-white border-b border-slate-200 px-8 py-3 flex items-center justify-between sticky top-0 z-20 shadow-xs">
         <div>
-            <h2 class="text-xl font-bold text-slate-900" th:text="${headerTitle} ?: 'Dashboard'">Live Operations Dashboard</h2>
-            <p class="text-xs text-slate-500" th:text="${headerSubtitle} ?: 'Here\'s what\'s happening at the zoo today.'">AI-Powered Intelligent Zoo Care & Decision Support</p>
+            <h2 class="text-xl font-bold text-slate-900" th:text="${headerTitle} ?: 'Dashboard'">Dashboard</h2>
+            <p class="text-xs text-slate-500" th:text="${headerSubtitle} ?: 'Here\'s an overview of today\'s zoo operations.'">AI-Powered Intelligent Zoo Care Support</p>
         </div>
         <div class="flex items-center gap-4">
-            <!-- Search Bar (on page 3 & others) -->
+            <!-- Search Bar -->
             <div class="relative hidden sm:block">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-                <input type="text" placeholder="Search animals, species, or features..." class="pl-8 pr-4 py-1.5 bg-slate-100 border border-slate-200 rounded-lg text-xs w-64 focus:outline-none focus:border-blue-500">
+                <input type="text" placeholder="Search animals, species, or zookeepers..." class="pl-8 pr-4 py-1.5 bg-slate-100 border border-slate-200 rounded-lg text-xs w-64 focus:outline-none focus:border-blue-500">
             </div>
 
             <!-- Notifications Bell -->
@@ -104,10 +190,10 @@
 
             <!-- Profile Badge -->
             <div class="flex items-center gap-2 border-l border-slate-200 pl-4">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Priya" class="w-8 h-8 rounded-full object-cover border border-blue-600">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Admin" class="w-8 h-8 rounded-full object-cover border border-blue-600">
                 <div class="hidden md:block">
-                    <p class="text-xs font-bold text-slate-900 leading-tight">Priya</p>
-                    <p class="text-[10px] text-slate-500 leading-tight">Zookeeper</p>
+                    <p class="text-xs font-bold text-slate-900 leading-tight" th:text="${session.zookeeper} ?: 'Admin'">Admin</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Administrator</p>
                 </div>
             </div>
         </div>

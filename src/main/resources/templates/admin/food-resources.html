@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food & Resources — AI Zoo Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .sidebar { width: 280px; background-color: #020617; border-right: 1px solid #1e293b; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: #94a3b8; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
+        .nav-item:hover { background-color: #1e293b; color: #ffffff; }
+        .nav-item.active { background-color: #1e3a8a; color: #ffffff; font-weight: 600; border-left: 4px solid #60a5fa; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <div th:replace="~{layout/main :: admin_sidebar}"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        <div th:replace="~{layout/main :: header}"></div>
+
+        <div class="p-8 space-y-6">
+
+            <!-- Page Title Header -->
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-apple-whole text-blue-600"></i> Food & Resources
+                    </h1>
+                    <p class="text-xs text-slate-500">Manage food items and other resources used in zoo operations.</p>
+                </div>
+                <button class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow flex items-center gap-2 transition">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Item</span>
+                </button>
+            </div>
+
+            <!-- Filter Tabs & Search Bar -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 bg-slate-200/80 p-1 rounded-xl">
+                    <button class="px-4 py-1.5 bg-white text-blue-900 font-bold text-xs rounded-lg shadow-xs">Food Items</button>
+                    <button class="px-4 py-1.5 text-slate-600 font-semibold text-xs rounded-lg hover:text-blue-900">Resources</button>
+                </div>
+
+                <div class="relative w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                    <input type="text" placeholder="Search food or resource..." class="pl-8 pr-4 py-1.5 bg-white border border-slate-200 rounded-xl text-xs w-full focus:outline-none focus:border-blue-600">
+                </div>
+            </div>
+
+            <!-- Food & Resources Table Card -->
+            <div class="card overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 uppercase text-[10px] font-bold">
+                                <th class="py-3 px-4">Item Name</th>
+                                <th class="py-3 px-4">Type</th>
+                                <th class="py-3 px-4">Quantity</th>
+                                <th class="py-3 px-4">Unit</th>
+                                <th class="py-3 px-4">Location</th>
+                                <th class="py-3 px-4">Status</th>
+                                <th class="py-3 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-bold text-slate-900">Grass</td>
+                                <td class="py-3.5 px-4 text-slate-500">Food</td>
+                                <td class="py-3.5 px-4 font-bold">50</td>
+                                <td class="py-3.5 px-4 text-slate-500">kg</td>
+                                <td class="py-3.5 px-4 text-slate-600">Storehouse</td>
+                                <td class="py-3.5 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full">✓ Available</span></td>
+                                <td class="py-3.5 px-4 text-right text-slate-400"><button><i class="fa-solid fa-ellipsis"></i></button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-bold text-slate-900">Hay</td>
+                                <td class="py-3.5 px-4 text-slate-500">Food</td>
+                                <td class="py-3.5 px-4 font-bold">30</td>
+                                <td class="py-3.5 px-4 text-slate-500">kg</td>
+                                <td class="py-3.5 px-4 text-slate-600">Storehouse</td>
+                                <td class="py-3.5 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full">✓ Available</span></td>
+                                <td class="py-3.5 px-4 text-right text-slate-400"><button><i class="fa-solid fa-ellipsis"></i></button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-bold text-slate-900">Banana</td>
+                                <td class="py-3.5 px-4 text-slate-500">Food</td>
+                                <td class="py-3.5 px-4 font-bold text-amber-700">10</td>
+                                <td class="py-3.5 px-4 text-slate-500">kg</td>
+                                <td class="py-3.5 px-4 text-slate-600">Storehouse</td>
+                                <td class="py-3.5 px-4"><span class="px-2.5 py-1 bg-amber-100 text-amber-800 text-[11px] font-bold rounded-full">⚠️ Low</span></td>
+                                <td class="py-3.5 px-4 text-right text-slate-400"><button><i class="fa-solid fa-ellipsis"></i></button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-bold text-slate-900">Meat</td>
+                                <td class="py-3.5 px-4 text-slate-500">Food</td>
+                                <td class="py-3.5 px-4 font-bold">20</td>
+                                <td class="py-3.5 px-4 text-slate-500">kg</td>
+                                <td class="py-3.5 px-4 text-slate-600">Freezer</td>
+                                <td class="py-3.5 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full">✓ Available</span></td>
+                                <td class="py-3.5 px-4 text-right text-slate-400"><button><i class="fa-solid fa-ellipsis"></i></button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-bold text-slate-900">Fish</td>
+                                <td class="py-3.5 px-4 text-slate-500">Food</td>
+                                <td class="py-3.5 px-4 font-bold">15</td>
+                                <td class="py-3.5 px-4 text-slate-500">kg</td>
+                                <td class="py-3.5 px-4 text-slate-600">Freezer</td>
+                                <td class="py-3.5 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full">✓ Available</span></td>
+                                <td class="py-3.5 px-4 text-right text-slate-400"><button><i class="fa-solid fa-ellipsis"></i></button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-bold text-slate-900">Cleaning Kit</td>
+                                <td class="py-3.5 px-4 text-slate-500">Resource</td>
+                                <td class="py-3.5 px-4 font-bold">5</td>
+                                <td class="py-3.5 px-4 text-slate-500">pcs</td>
+                                <td class="py-3.5 px-4 text-slate-600">Zone A</td>
+                                <td class="py-3.5 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full">✓ Available</span></td>
+                                <td class="py-3.5 px-4 text-right text-slate-400"><button><i class="fa-solid fa-ellipsis"></i></button></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-3.5 px-4 font-bold text-slate-900">Enrichment Kit</td>
+                                <td class="py-3.5 px-4 text-slate-500">Resource</td>
+                                <td class="py-3.5 px-4 font-bold">3</td>
+                                <td class="py-3.5 px-4 text-slate-500">pcs</td>
+                                <td class="py-3.5 px-4 text-slate-600">Zone C</td>
+                                <td class="py-3.5 px-4"><span class="px-2.5 py-1 bg-green-100 text-green-800 text-[11px] font-bold rounded-full">✓ Available</span></td>
+                                <td class="py-3.5 px-4 text-right text-slate-400"><button><i class="fa-solid fa-ellipsis"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>
