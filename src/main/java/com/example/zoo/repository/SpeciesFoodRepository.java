@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface SpeciesFoodRepository extends JpaRepository<SpeciesFood, Long> {
     List<SpeciesFood> findBySpeciesName(String speciesName);
+    List<SpeciesFood> findBySpeciesNameIgnoreCase(String speciesName);
 }

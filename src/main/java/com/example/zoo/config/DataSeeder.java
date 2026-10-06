@@ -25,6 +25,7 @@ public class DataSeeder implements CommandLineRunner {
     private final ZookeeperAvailabilityRepository zookeeperAvailabilityRepository;
     private final FoodAvailabilityRepository foodAvailabilityRepository;
     private final ObservationRepository observationRepository;
+    private final DangerousFoodKnowledgeRepository dangerousFoodKnowledgeRepository;
 
     public DataSeeder(AnimalRepository animalRepository,
                       FoodRepository foodRepository,
@@ -35,7 +36,8 @@ public class DataSeeder implements CommandLineRunner {
                       ZookeeperRepository zookeeperRepository,
                       ZookeeperAvailabilityRepository zookeeperAvailabilityRepository,
                       FoodAvailabilityRepository foodAvailabilityRepository,
-                      ObservationRepository observationRepository) {
+                      ObservationRepository observationRepository,
+                      DangerousFoodKnowledgeRepository dangerousFoodKnowledgeRepository) {
         this.animalRepository = animalRepository;
         this.foodRepository = foodRepository;
         this.speciesKnowledgeRepository = speciesKnowledgeRepository;
@@ -46,6 +48,7 @@ public class DataSeeder implements CommandLineRunner {
         this.zookeeperAvailabilityRepository = zookeeperAvailabilityRepository;
         this.foodAvailabilityRepository = foodAvailabilityRepository;
         this.observationRepository = observationRepository;
+        this.dangerousFoodKnowledgeRepository = dangerousFoodKnowledgeRepository;
     }
 
     @Override
@@ -63,7 +66,10 @@ public class DataSeeder implements CommandLineRunner {
             seedAnimals();
             seedCareRules();
             seedObservations();
+            seedDangerousFoods();
             System.out.println(">>> SQLite zoo.db database successfully initialized with demo data!");
+        } else if (dangerousFoodKnowledgeRepository.count() == 0) {
+            seedDangerousFoods();
         }
     }
 
@@ -260,5 +266,53 @@ public class DataSeeder implements CommandLineRunner {
         Observation obs = new Observation("E101", "Aruna", "Low", "Normal", "Low", "Aruna ate less food today.");
         obs.setAiPatternDetected("Monitor");
         observationRepository.save(obs);
+    }
+
+    private void seedDangerousFoods() {
+        List<DangerousFoodKnowledge> dangerousList = Arrays.asList(
+                // Elephant
+                new DangerousFoodKnowledge("Elephant", "Chocolate & Cocoa", "CRITICAL", "Contains theobromine which large mammals cannot metabolize.", "Cardiac arrhythmias, severe tremors, and hyperthermia."),
+                new DangerousFoodKnowledge("Elephant", "Onions & Garlic", "CRITICAL", "Organosulfides cause oxidative hemolysis of red blood cells.", "Hemolytic anemia, pale gums, and severe weakness."),
+                new DangerousFoodKnowledge("Elephant", "Raw Potatoes / Nightshades", "HIGH", "High solanine alkaloid concentration toxic to GI tract.", "Gastrointestinal necrosis and central nervous system depression."),
+                new DangerousFoodKnowledge("Elephant", "Refined Processed Sugar", "HIGH", "Causes rapid cecal microbial fermentation and bloat.", "Severe colic, digestive acidosis, and laminitis."),
+
+                // Lion & Tiger
+                new DangerousFoodKnowledge("Lion", "Cooked Bones", "CRITICAL", "Splinters easily during digestion creating sharp fragments.", "Esophageal laceration, stomach perforation, and peritonitis."),
+                new DangerousFoodKnowledge("Lion", "Onions & Leeks", "CRITICAL", "N-propyl disulfide causes feline red blood cell damage.", "Heinz body anemia, dark urine, and collapse."),
+                new DangerousFoodKnowledge("Lion", "Chocolate & Coffee", "CRITICAL", "Methylxanthines induce severe cardiovascular stimulation.", "Tachycardia, seizures, and sudden cardiac failure."),
+                new DangerousFoodKnowledge("Lion", "Grapes & Raisins", "HIGH", "Tartaric acid induces feline nephrotoxicity.", "Acute renal failure and anuria."),
+
+                new DangerousFoodKnowledge("Tiger", "Cooked Bones", "CRITICAL", "Sharp splinters cause severe digestive tract laceration.", "Intestinal rupture and acute internal hemorrhaging."),
+                new DangerousFoodKnowledge("Tiger", "Onions & Garlic", "CRITICAL", "Destroys red blood cells via toxic oxidative stress.", "Severe anemia and lethargy."),
+                new DangerousFoodKnowledge("Tiger", "Chocolate", "CRITICAL", "Fatal cardiac and nervous system overstimulation.", "Arrhythmia, convulsions, and coma."),
+
+                // Herbivores (Giraffe, Zebra, Deer, Rhino, Hippo)
+                new DangerousFoodKnowledge("Giraffe", "Meat & Animal Products", "CRITICAL", "Obligate herbivore digestion unable to process animal fats.", "Digestive impaction and fatal metabolic toxicity."),
+                new DangerousFoodKnowledge("Giraffe", "Chocolate", "CRITICAL", "Theobromine neurotoxicity.", "Cardiac distress and tremors."),
+                new DangerousFoodKnowledge("Giraffe", "Fruit Pits / Stones", "HIGH", "Cyanogenic glycosides convert to hydrogen cyanide.", "Asphyxiation and cellular hypoxia."),
+
+                new DangerousFoodKnowledge("Zebra", "Meat / Poultry", "CRITICAL", "Hindgut fermentation system disrupted by meat protein.", "Severe cecal impaction and colic."),
+                new DangerousFoodKnowledge("Zebra", "Onions", "CRITICAL", "Hemolytic toxicity destroying oxygen transport.", "Anemia and respiratory exhaustion."),
+
+                new DangerousFoodKnowledge("Deer", "Processed Grains / Bread", "HIGH", "Causes rapid rumen lactic acidosis.", "Rumenitis, dehydration, and metabolic acidosis."),
+                new DangerousFoodKnowledge("Rhino", "Meat", "CRITICAL", "Herbivore GI failure.", "Severe impaction."),
+                new DangerousFoodKnowledge("Hippo", "Meat", "CRITICAL", "Non-ruminant herbivore metabolic failure.", "Cecal paralysis."),
+
+                // Omnivores / Primates (Monkey, Bear, Parrot)
+                new DangerousFoodKnowledge("Monkey", "Chocolate & Cocoa", "CRITICAL", "Theobromine toxicity in primates.", "Seizures, hyperthermia, and heart failure."),
+                new DangerousFoodKnowledge("Monkey", "Avocado Skin & Pits", "HIGH", "Persin toxicity.", "Myocardial necrosis and pulmonary edema."),
+                new DangerousFoodKnowledge("Monkey", "Raw Beans / Legumes", "HIGH", "Phytohaemagglutinin toxicity.", "Severe vomiting and intestinal hemorrhaging."),
+
+                new DangerousFoodKnowledge("Bear", "Chocolate", "CRITICAL", "Fatal methylxanthine overdose.", "Tremors and heart failure."),
+                new DangerousFoodKnowledge("Bear", "Avocado", "HIGH", "Persin cardiotoxicity.", "Fluid accumulation in heart and lungs."),
+
+                new DangerousFoodKnowledge("Parrot", "Avocado", "CRITICAL", "Extremely lethal persin toxicity in avian species.", "Immediate respiratory failure and cardiac collapse within 12h."),
+                new DangerousFoodKnowledge("Parrot", "Chocolate & Caffeine", "CRITICAL", "Avian nervous system sensitivity.", "Fatal seizures and hyperactivity."),
+                new DangerousFoodKnowledge("Parrot", "Salt / Salty Snacks", "HIGH", "Avian renal vulnerability.", "Extreme polydipsia, salt toxicosis, and kidney failure."),
+
+                // Reptiles
+                new DangerousFoodKnowledge("Crocodile", "High Carbohydrates / Bread", "HIGH", "Lack of amylase enzymes for starch digestion.", "Severe intestinal fermentation and putrefaction.")
+        );
+        dangerousFoodKnowledgeRepository.saveAll(dangerousList);
     }
 }

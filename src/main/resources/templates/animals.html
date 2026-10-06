@@ -37,7 +37,7 @@
                     </a>
                     <a th:href="@{/animals(tab=2)}"
                        th:class="${activeTab == '2'} ? 'px-4 py-2 text-sm font-semibold bg-white text-blue-700 rounded-md shadow-sm' : 'px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-700'">
-                        🧠 TAB 2: AI KNOWLEDGE BASE
+                        🧠 TAB 2: AI KNOWLEDGE BASE & DIET QUERY
                     </a>
                 </div>
             </div>
@@ -178,25 +178,186 @@
                 </script>
             </div>
 
-            <!-- TAB 2 — AI KNOWLEDGE BASE CONTENT -->
+            <!-- TAB 2 — AI KNOWLEDGE BASE & DIETARY QUERY CONTENT -->
             <div th:if="${activeTab == '2'}" class="space-y-6">
-                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-900 text-sm flex items-center gap-3">
-                    <span class="text-2xl">🧠</span>
-                    <div>
-                        <h4 class="font-bold">Persistent Taxonomical Knowledge Base</h4>
-                        <p class="text-xs text-blue-800">This species knowledge is stored persistently in SQLite. The AI Feeding Planner automatically retrieves these constraints without requiring daily re-entry.</p>
+
+                <!-- AI Query Banner & Form -->
+                <div class="card p-6 border-blue-200 bg-gradient-to-r from-blue-900 via-slate-900 to-blue-950 text-white rounded-xl shadow-lg">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-3xl">🔮</span>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">AI Animal Dietary & Toxic Hazard Reasoning Engine</h3>
+                            <p class="text-xs text-blue-200">Query suitable foods, age-adjusted portion recommendations, and species-specific toxic food hazards stored in SQLite.</p>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/animals/analyze-diet}" method="post" class="mt-4 bg-slate-800/80 p-4 rounded-xl border border-slate-700 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-blue-200 mb-1">Animal Name</label>
+                                <input type="text" id="queryNameInput" name="name" required th:value="${queryName != null ? queryName : 'Aruna'}" placeholder="e.g. Aruna, Simba" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-blue-400 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-blue-200 mb-1">Species Taxonomy</label>
+                                <select id="querySpeciesSelect" name="species" required class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-blue-400 focus:outline-none">
+                                    <option value="Elephant" th:selected="${querySpecies == 'Elephant'}">🐘 Elephant</option>
+                                    <option value="Lion" th:selected="${querySpecies == 'Lion'}">🦁 Lion</option>
+                                    <option value="Giraffe" th:selected="${querySpecies == 'Giraffe'}">🦒 Giraffe</option>
+                                    <option value="Zebra" th:selected="${querySpecies == 'Zebra'}">🦓 Zebra</option>
+                                    <option value="Tiger" th:selected="${querySpecies == 'Tiger'}">🐅 Tiger</option>
+                                    <option value="Deer" th:selected="${querySpecies == 'Deer'}">🦌 Deer</option>
+                                    <option value="Monkey" th:selected="${querySpecies == 'Monkey'}">🐒 Monkey</option>
+                                    <option value="Bear" th:selected="${querySpecies == 'Bear'}">🐻 Bear</option>
+                                    <option value="Penguin" th:selected="${querySpecies == 'Penguin'}">🐧 Penguin</option>
+                                    <option value="Rhino" th:selected="${querySpecies == 'Rhino'}">🦏 Rhino</option>
+                                    <option value="Hippo" th:selected="${querySpecies == 'Hippo'}">🦛 Hippo</option>
+                                    <option value="Parrot" th:selected="${querySpecies == 'Parrot'}">🦜 Parrot</option>
+                                    <option value="Crocodile" th:selected="${querySpecies == 'Crocodile'}">🐊 Crocodile</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-blue-200 mb-1">Age (Years)</label>
+                                <input type="number" id="queryAgeInput" name="age" required min="0" max="100" th:value="${queryAge != null ? queryAge : 12}" placeholder="12" class="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:border-blue-400 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                            <!-- Quick Preset Badges -->
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="text-slate-400 font-medium">Quick Presets:</span>
+                                <button type="button" onclick="setPreset('Aruna', 'Elephant', 12)" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-blue-200 rounded-full border border-slate-600 transition">🐘 Aruna (12y Elephant)</button>
+                                <button type="button" onclick="setPreset('Simba', 'Lion', 4)" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-amber-200 rounded-full border border-slate-600 transition">🦁 Simba (4y Lion)</button>
+                                <button type="button" onclick="setPreset('Polly', 'Parrot', 2)" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-green-200 rounded-full border border-slate-600 transition">🦜 Polly (2y Parrot)</button>
+                                <button type="button" onclick="setPreset('Chimp', 'Monkey', 16)" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 text-purple-200 rounded-full border border-slate-600 transition">🐒 Chimp (16y Senior)</button>
+                            </div>
+
+                            <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-lg shadow-md flex items-center gap-2 transition">
+                                <i class="fa-solid fa-brain"></i>
+                                <span>ANALYZE ANIMAL DIET & TOXICITY RISKS</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- AI REASONING OUTPUT RESULT CARD -->
+                <div th:if="${dietaryAnalysis != null}" class="space-y-6">
+                    <!-- AI Summary Bar -->
+                    <div class="p-4 bg-slate-900 text-white rounded-xl border border-blue-900 shadow flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="p-3 bg-blue-600/30 rounded-lg border border-blue-500 text-2xl">🤖</span>
+                            <div>
+                                <h4 class="font-bold text-base text-white" th:text="${'AI Reasoning Results for ' + dietaryAnalysis.animalName + ' (' + dietaryAnalysis.species + ')'}">Aruna (Elephant)</h4>
+                                <p class="text-xs text-blue-200" th:text="${dietaryAnalysis.aiSummary}">AI evaluated...</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1.5 bg-blue-800 text-blue-100 font-semibold text-xs rounded-full border border-blue-600"
+                              th:text="${'Age Category: ' + dietaryAnalysis.ageCategory}">Adult</span>
+                    </div>
+
+                    <!-- 2-Column Grid: Suitable Foods vs Toxic Foods -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                        <!-- COLUMN 1: SUITABLE & SAFE FOODS -->
+                        <div class="card p-6 space-y-4 border-l-4 border-l-green-500">
+                            <div class="flex items-center justify-between border-b pb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xl">🟢</span>
+                                    <h4 class="font-bold text-lg text-slate-900">Suitable Foods Eaten</h4>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-1 bg-green-100 text-green-800 rounded-full"
+                                      th:text="${dietaryAnalysis.suitableFoods != null ? dietaryAnalysis.suitableFoods.size() + ' Safe Items' : '0 Safe Items'}">0 Items</span>
+                            </div>
+
+                            <div th:if="${dietaryAnalysis.suitableFoods != null and not #lists.isEmpty(dietaryAnalysis.suitableFoods)}" class="space-y-3">
+                                <div th:each="food : ${dietaryAnalysis.suitableFoods}" class="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-apple-whole text-green-600 text-lg"></i>
+                                        <div>
+                                            <span class="font-bold text-slate-800 text-sm" th:text="${food.foodName}">Grass</span>
+                                            <span th:if="${food.isPrimaryPreference}" class="ml-2 px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded-full border border-amber-300">⭐ Primary Preference</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xs font-mono font-bold text-blue-900 bg-blue-50 px-2 py-1 rounded border border-blue-200" th:text="${food.standardPortionKg + ' kg/meal'}">15.0 kg</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${dietaryAnalysis.suitableFoods == null or #lists.isEmpty(dietaryAnalysis.suitableFoods)}" class="p-4 bg-slate-50 text-slate-500 text-xs text-center rounded-lg">
+                                No custom suitable foods listed in database for this species.
+                            </div>
+                        </div>
+
+                        <!-- COLUMN 2: DANGEROUS & TOXIC FOODS -->
+                        <div class="card p-6 space-y-4 border-l-4 border-l-red-500">
+                            <div class="flex items-center justify-between border-b pb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xl">🔴</span>
+                                    <h4 class="font-bold text-lg text-slate-900">Dangerous & Toxic Foods (DO NOT FEED)</h4>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-1 bg-red-100 text-red-800 rounded-full"
+                                      th:text="${dietaryAnalysis.dangerousFoods != null ? dietaryAnalysis.dangerousFoods.size() + ' Known Hazards' : '0 Hazards'}">0 Hazards</span>
+                            </div>
+
+                            <div th:if="${dietaryAnalysis.dangerousFoods != null and not #lists.isEmpty(dietaryAnalysis.dangerousFoods)}" class="space-y-3">
+                                <div th:each="df : ${dietaryAnalysis.dangerousFoods}" class="p-3 bg-red-50/50 border border-red-200 rounded-lg space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-red-950 text-sm flex items-center gap-2">
+                                            <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
+                                            <span th:text="${df.foodName}">Chocolate</span>
+                                        </span>
+                                        <span th:class="${df.riskLevel == 'CRITICAL' ? 'px-2 py-0.5 bg-red-600 text-white font-bold text-[10px] rounded' : (df.riskLevel == 'HIGH' ? 'px-2 py-0.5 bg-amber-600 text-white font-bold text-[10px] rounded' : 'px-2 py-0.5 bg-yellow-500 text-slate-900 font-bold text-[10px] rounded')}"
+                                              th:text="${df.riskLevel}">CRITICAL</span>
+                                    </div>
+                                    <p class="text-xs text-slate-700"><strong>Danger Reason:</strong> <span th:text="${df.dangerReason}">Toxicity...</span></p>
+                                    <p class="text-xs text-red-700 font-semibold"><strong>Warning Symptoms:</strong> <span th:text="${df.symptomWarning}">Seizures...</span></p>
+                                </div>
+                            </div>
+                            <div th:if="${dietaryAnalysis.dangerousFoods == null or #lists.isEmpty(dietaryAnalysis.dangerousFoods)}" class="p-4 bg-slate-50 text-slate-500 text-xs text-center rounded-lg">
+                                No species-specific toxic hazards recorded.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AGE-SPECIFIC AI ADVISORY -->
+                    <div class="card p-5 bg-blue-50/60 border border-blue-200 space-y-2">
+                        <div class="flex items-center gap-2 text-blue-900 font-bold text-sm">
+                            <i class="fa-solid fa-lightbulb text-amber-500 text-base"></i>
+                            <span>Age-Specific AI Nutrition Advisory</span>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed" th:text="${dietaryAnalysis.ageNutritionAdvisory}">Advisory notes...</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div th:each="sk : ${speciesKnowledgeList}" class="card p-6 space-y-3">
-                        <div class="flex items-center justify-between border-b pb-2">
-                            <h3 class="font-bold text-lg text-blue-900" th:text="${sk.speciesName}">Elephant</h3>
-                            <span class="text-xs font-semibold px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full" th:text="${'Min Feedings: ' + sk.minDailyFeedings + '/day'}">3/day</span>
+                <!-- Persistent Species Taxonomical Rules -->
+                <div class="pt-4 border-t border-slate-200">
+                    <div class="p-4 bg-slate-100 border border-slate-200 rounded-lg text-slate-800 text-sm flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">📚</span>
+                            <div>
+                                <h4 class="font-bold text-blue-950">Persistent Taxonomical Rules (SQLite)</h4>
+                                <p class="text-xs text-slate-600">Base taxonomical parameters maintained across all 13 zoo species.</p>
+                            </div>
                         </div>
-                        <p class="text-xs text-slate-600" th:text="${sk.description}">Large herbivorous mammal...</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div th:each="sk : ${speciesKnowledgeList}" class="card p-6 space-y-3">
+                            <div class="flex items-center justify-between border-b pb-2">
+                                <h3 class="font-bold text-lg text-blue-900" th:text="${sk.speciesName}">Elephant</h3>
+                                <span class="text-xs font-semibold px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full" th:text="${'Min Feedings: ' + sk.minDailyFeedings + '/day'}">3/day</span>
+                            </div>
+                            <p class="text-xs text-slate-600" th:text="${sk.description}">Large herbivorous mammal...</p>
+                        </div>
                     </div>
                 </div>
+
+                <script>
+                    function setPreset(name, species, age) {
+                        document.getElementById('queryNameInput').value = name;
+                        document.getElementById('querySpeciesSelect').value = species;
+                        document.getElementById('queryAgeInput').value = age;
+                    }
+                </script>
             </div>
         </div>
     </main>
