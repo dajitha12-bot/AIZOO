@@ -7,14 +7,14 @@
 <body>
 
     <!-- SIDEBAR FRAGMENT -->
-    <aside th:fragment="sidebar" class="sidebar flex flex-col justify-between h-full p-4 flex-shrink-0 bg-white border-r border-slate-200 w-[280px]">
+    <aside th:fragment="sidebar" class="sidebar flex flex-col justify-between h-full p-4 flex-shrink-0 bg-slate-900 text-white border-r border-slate-800 w-[280px]">
         <div>
             <!-- Header Logo -->
-            <div class="flex items-center gap-3 px-3 py-4 mb-6 border-b border-slate-100">
+            <div class="flex items-center gap-3 px-3 py-4 mb-6 border-b border-slate-800/80">
                 <span class="text-3xl">🦁</span>
                 <div>
-                    <h1 class="text-lg font-bold text-blue-900 leading-tight">AI ZOO PLANNER</h1>
-                    <p class="text-xs text-slate-500 font-medium">Intelligent Decision System</p>
+                    <h1 class="text-lg font-bold text-white leading-tight">AI ZOO PLANNER</h1>
+                    <p class="text-xs text-blue-400 font-medium">Intelligent Decision System</p>
                 </div>
             </div>
 
@@ -53,18 +53,18 @@
         </div>
 
         <!-- Sidebar Bottom Footer -->
-        <div class="pt-4 border-t border-slate-100">
-            <div class="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg">
+        <div class="pt-4 border-t border-slate-800/80">
+            <div class="flex items-center justify-between px-3 py-2 bg-slate-800/90 rounded-lg">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                    <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow">
                         👤
                     </div>
                     <div>
-                        <p class="text-sm font-semibold text-slate-800" th:text="${session != null and session.zookeeper != null} ? ${session.zookeeper} : 'Zookeeper'">Zookeeper</p>
-                        <p class="text-xs text-slate-500">Active Session</p>
+                        <p class="text-sm font-semibold text-white" th:text="${session != null and session.zookeeper != null} ? ${session.zookeeper} : 'Zookeeper'">Zookeeper</p>
+                        <p class="text-xs text-blue-300">Active Session</p>
                     </div>
                 </div>
-                <a th:href="@{/logout}" class="text-slate-400 hover:text-red-600 text-sm p-1" title="Logout">
+                <a th:href="@{/logout}" class="text-slate-400 hover:text-red-400 text-sm p-1" title="Logout">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
@@ -72,14 +72,14 @@
     </aside>
 
     <!-- HEADER FRAGMENT -->
-    <header th:fragment="header" class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+    <header th:fragment="header" class="bg-blue-900 text-white border-b border-blue-950 px-8 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
         <div>
-            <h2 class="text-xl font-bold text-slate-800" th:text="${headerTitle} ?: 'Dashboard'">Dashboard</h2>
-            <p class="text-xs text-slate-500">AI-Powered Intelligent Zoo Care & Decision Support</p>
+            <h2 class="text-xl font-bold text-white" th:text="${headerTitle} ?: 'Dashboard'">Dashboard</h2>
+            <p class="text-xs text-blue-200">AI-Powered Intelligent Zoo Care & Decision Support</p>
         </div>
         <div class="flex items-center gap-4">
-            <span class="text-xs font-semibold px-3 py-1 bg-green-100 text-green-700 rounded-full border border-green-200 flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> SQLite Active (zoo.db)
+            <span class="text-xs font-semibold px-3 py-1 bg-blue-950/80 text-emerald-400 rounded-full border border-blue-800/60 flex items-center gap-1.5 shadow-inner">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> SQLite Active (zoo.db)
             </span>
         </div>
     </header>
